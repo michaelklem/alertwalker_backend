@@ -148,8 +148,10 @@ Router.post('/init', async (req, res) =>
 		*/
 
 		let mapCreateDelta = await mConfiguration.findOne({ name: 'MAP_CREATE_DELTA' });
+		console.log(mapCreateDelta);
 		mapCreateDelta = mapCreateDelta.value;
-
+		console.log(mapCreateDelta);
+		
 		res.status(200).send(
 		{
 			error: null,
