@@ -1,0 +1,96 @@
+{
+  "name":         "coalert-walkerre-backend",
+  "description":  "Backend in Node.JS",
+  "keywords":
+  [
+    "node",
+    "express"
+  ],
+  "env":
+  {
+    "AWS_ACCESS_KEY_ID":
+    {
+      "description":    "Access key ID for AWS Simple Email Service",
+      "value":          ""
+    },
+    "AWS_SECRET_ACCESS_KEY":
+    {
+      "description":    "Secret access key for AWS Simple Email Service",
+      "value":          ""
+    },
+    "AWS_SES_REGION":
+    {
+      "description":    "Region AWS Simple Email Service is setup on",
+      "value":          "us-east-1"
+    },
+    "AWS_S3_REGION":
+    {
+      "description":    "Region AWS Simple Storage is setup on",
+      "value":          "us-east-1"
+    },
+    "AWS_PIN_POINT_REGION":
+    {
+      "description":    "Region AWS Pinpoint is setup on",
+      "value":          "us-east-1"
+    },
+    "EMAIL_FROM_EMAIL":
+    {
+      "description":    "Email address used for sending emails (You will receive a verification email here)",
+      "value":          ""
+    },
+    "FIREBASE_SERVER_KEY":
+    {
+      "description":    "https://console.firebase.google.com/project/software-bitbybit-$PROJECT_NAME/settings/cloudmessaging/android:software.bitbybit.$PROJECT_NAME",
+      "value":          ""
+    },
+    "FRONTEND_TITLE":
+    {
+      "description":    "Name to display for frontend",
+      "value":          ""
+    },
+    "GOOGLE_CREDENTIALS":
+    {
+      "description":    "Create project in Google console, setup OAuth consent screen, add Google Calendar API, and download credentials.json and place value here (add oauth redirect_uris)",
+      "value":          ""
+    },
+    "JWT_TOKEN_KEY":
+    {
+      "description":    "Secure key for generating JWT tokens (https://www.lastpass.com/password-generator)",
+      "value":          "MS!SvOcDUCYZ0xl3VaWRPYBm7&y8Qg59"
+    },
+    "JWT_TOKEN_EXPIRE_SEC":
+    {
+      "description":    "Time until a user must login again due to inactive session (default is 1 week)",
+      "value":          604800
+    },
+    "LIVE":
+    {
+      "description":    "If production or QA.",
+      "value":          "false"
+    },
+    "MICROSOFT_CREDENTIALS":
+    {
+      "description":    "https://aad.portal.azure.com/",
+      "value":          ""
+    },
+    "MONGODB_URI":
+    {
+      "description":    "Database connection string",
+      "value":          ""
+    },
+    "VAPID_PRIVATE_KEY":
+    {
+      "description":    "Run: web-push generate-vapid-keys (Used for web push notifications)",
+      "value":          ""
+    },
+    "VAPID_PUBLIC_KEY":
+    {
+      "description":    "Run: web-push generate-vapid-keys (Used for web push notifications)",
+      "value":          ""
+    }
+  },
+  "image" : "heroku/nodejs",
+  "addons":
+  [
+  ]
+}

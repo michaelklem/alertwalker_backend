@@ -1,0 +1,36 @@
+{
+  "tags": {
+    "allowUnknownTags": true,
+    "dictionaries": [ "closure", "jsdoc" ]
+  },
+  "source": {
+    "include": [ "./app/controller" ],
+    "exclude": [ "node_modules" ],
+    "includePattern": ".+\\.js(doc|x)?$",
+    "excludePattern": "(^|\\/|\\\\)_"
+  },
+  "templates": {
+    "systemName"            : "Alert Walker",
+    "footer"                : "",
+    "copyright"             :  "",
+    "includeDate"           : true,
+    "navType"               : "inline",
+    "theme"                 : "spacelab",
+    "linenums"              : false,
+    "collapseSymbols"       : true,
+    "inverseNav"            : false,
+    "outputSourceFiles"     : false ,
+    "outputSourcePath"      : false,
+    "dateFormat"            : "",
+    "syntaxTheme"           : "dark",
+    "sort"					        : "longname,version,since",
+    "search"                : true
+  },
+  "plugins": ["jsdoc-route-plugin"],
+  "opts": {
+    "recurse": true,
+    "destination": "./doc",
+    "template": "./node_modules/ink-docstrap/template",
+    "readme": "./DOCREADME.md"
+  }
+}
