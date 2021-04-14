@@ -25,7 +25,6 @@ app.use(Cors());
 app.use('/component',     require('./app/controller/component-controller'));
 app.use('/data',          require('./app/controller/data-controller'));
 app.use('/location',      require('./app/controller/location-controller'));
-app.use('/model',         require('./app/controller/model-controller'));
 app.use('/notification',  require('./app/controller/notification-controller'));
 app.use('/oauth',         require('./app/controller/oauth-controller'));
 app.use('/push',          require('./app/controller/push-controller'));
@@ -63,7 +62,7 @@ async function init(httpServer)
 
   // Initialize utility manager
   const utilityMgr = await UtilityManager.Init(modelMgr);
-  
+
 	// Initialize site manager
 	await SiteManager.Init();
 
