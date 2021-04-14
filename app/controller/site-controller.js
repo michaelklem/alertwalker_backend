@@ -162,6 +162,7 @@ Router.post('/init', async (req, res) =>
 			frontendUrl: frontendUrl,
 			oauthTokens: oauthTokens,
 			thirdPartyAccounts: thirdPartyAccounts,
+			mapCreateDelta: mapCreateDelta,
 			//mapCreateRadius: mapCreateRadius,
 		});
 	}
