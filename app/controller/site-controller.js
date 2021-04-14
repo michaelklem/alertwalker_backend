@@ -117,23 +117,6 @@ Router.post('/init', async (req, res) =>
 
 		const mConfiguration = modelMgr.getModel('configuration');
 
-		// Check if terms of service required
-		let tosRequired = await mConfiguration.findOne({ name: 'TERMS_OF_SERVICE_REQUIRED' });
-		tosRequired = tosRequired.value === 'true' ? true : false;
-		let termsOfService = [];
-		if(tosRequired)
-		{
-			// Get TOS
-			const tos = modelMgr.getModel('tos');
-			termsOfService = await tos.find({}, {index: 1});
-		}
-
-		// Share text
-		let shareText = 'Check out this app';
-
-		// Invite text
-		let inviteText = 'Check out this app';
-
 		// Frontend URL
 		let frontendUrl = await mConfiguration.findOne({ name: 'FRONTEND_URL '});
 		frontendUrl = frontendUrl.value;
@@ -159,9 +142,13 @@ Router.post('/init', async (req, res) =>
 				thirdPartyAccounts = await mThirdPartyAccount.find({ createdBy: decodedTokenResult.user._id });
 			}
 		}
-
+		/* Commenting this out as using MAP_CREATE_DELTA to restrict map view itself instead of marker
 		let mapCreateRadius = await mConfiguration.findOne({ name: 'MAP_CREATE_RADIUS' });
 		mapCreateRadius = mapCreateRadius.value;
+		*/
+
+		let mapCreateDelta = await mConfiguration.findOne({ name: 'MAP_CREATE_DELTA' });
+		mapCreateDelta = mapCreateDelta.value;
 
 		res.status(200).send(
 		{
@@ -170,15 +157,12 @@ Router.post('/init', async (req, res) =>
 			frontendTitle: Environment.FRONTEND_TITLE,
 			guestAccessAllowed: false,
 			pages: pages,
-			termsOfService: termsOfService,
 			internalTypes: siteMgr.getInternalTypes(),
-			shareText: shareText,
 			instagramAppId: '',
 			frontendUrl: frontendUrl,
 			oauthTokens: oauthTokens,
-			inviteText: inviteText,
 			thirdPartyAccounts: thirdPartyAccounts,
-			mapCreateRadius: mapCreateRadius,
+			//mapCreateRadius: mapCreateRadius,
 		});
 	}
 	catch(err)
