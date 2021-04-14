@@ -148,7 +148,7 @@ Router.post('/init', async (req, res) =>
 		*/
 
 		let mapCreateDelta = await mConfiguration.findOne({ name: 'MAP_CREATE_DELTA' });
-		mapCreateDelta = JSON.parse(mapCreateDelta.value);
+		mapCreateDelta = mapCreateDelta.value;
 
 		res.status(200).send(
 		{
