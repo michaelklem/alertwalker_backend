@@ -295,103 +295,111 @@ class Pusher
                           createdBy,
                           createdByAction })
   {
-    if(Pusher.#instance === null)
+    try
     {
-      throw new Error('Pusher not instantiated');
-    }
-
-    let body = Pusher.#instance.#notificationMgr.parseNotificationBody(notification);
-
-    const mPushNotification = Pusher.#instance.#modelMgr.getModel('pushnotification');
-    let messageRequest = {};
-
-    /*  The priority of the push notification. If the value is 'normal', then the
-        delivery of the message is optimized for battery usage on the recipient's
-        device, and could be delayed. If the value is 'high', then the notification is
-        sent immediately, and might wake a sleeping device. */
-    const priority = 'normal';
-
-    if(pushToken.service === 'ios')
-    {
-      messageRequest =
+      if(Pusher.#instance === null)
       {
-        'Addresses':
-        {
-          [pushToken.token.token]:
-          {
-            'ChannelType' : Environment.LIVE === 'true' ? 'APNS' : 'APNS_SANDBOX'
-          }
-        },
-        'MessageConfiguration':
-        {
-          'APNSMessage':
-          {
-            'Action': onOpenAction,
-            'Body': body,
-            'Priority': priority,
-            'SilentPush': false,
-            'Title': notification.title,
-            'TimeToLive': 30,
-            'Url': notification._id.toString()
-          }
-        }
-      };
-    }
-    else if(pushToken.service == 'android')
-    {
-      messageRequest =
+        throw new Error('Pusher not instantiated');
+      }
+
+      let body = Pusher.#instance.#notificationMgr.parseNotificationBody(notification);
+
+      const mPushNotification = Pusher.#instance.#modelMgr.getModel('pushnotification');
+      let messageRequest = {};
+
+      /*  The priority of the push notification. If the value is 'normal', then the
+          delivery of the message is optimized for battery usage on the recipient's
+          device, and could be delayed. If the value is 'high', then the notification is
+          sent immediately, and might wake a sleeping device. */
+      const priority = 'normal';
+
+      if(pushToken.service === 'ios')
       {
-        'Addresses':
+        messageRequest =
         {
-          [pushToken.token]:
+          'Addresses':
           {
-            'ChannelType' : 'GCM'
+            [pushToken.token.token]:
+            {
+              'ChannelType' : Environment.LIVE === 'true' ? 'APNS' : 'APNS_SANDBOX'
+            }
+          },
+          'MessageConfiguration':
+          {
+            'APNSMessage':
+            {
+              'Action': onOpenAction,
+              'Body': body,
+              'Priority': priority,
+              'SilentPush': false,
+              'Title': notification.title,
+              'TimeToLive': 30,
+              'Url': notification._id.toString()
+            }
           }
-        },
-        'MessageConfiguration':
+        };
+      }
+      else if(pushToken.service == 'android')
+      {
+        messageRequest =
         {
-          'GCMMessage':
+          'Addresses':
           {
-            'Action': onOpenAction,
-            'Body': body,
-            'Priority': priority,
-            'SilentPush': false,
-            'Title': notification.title,
-            'TimeToLive': 30,
-            'Url': url
+            [pushToken.token]:
+            {
+              'ChannelType' : 'GCM'
+            }
+          },
+          'MessageConfiguration':
+          {
+            'GCMMessage':
+            {
+              'Action': onOpenAction,
+              'Body': body,
+              'Priority': priority,
+              'SilentPush': false,
+              'Title': notification.title,
+              'TimeToLive': 30,
+              'Url': url
+            }
           }
-        }
+        };
+      }
+      else
+      {
+        return false;
+      }
+
+      const params =
+      {
+        'ApplicationId': Pusher.#instance.#pinpointAppId,
+        'MessageRequest': messageRequest
       };
+
+      console.log(messageRequest);
+
+      const pusher = await Pusher.GetInstance();
+      const result = await pusher.awsClient().sendMessages(params).promise();
+      console.log(result.MessageResponse.RequestId);
+      console.log(JSON.stringify(result.MessageResponse.Result));
+
+      const pushNotification = await mPushNotification.create(
+      {
+        notification: notification._id,
+        onOpenAction: onOpenAction,
+        pushToken: pushToken,
+        url: url,
+        result: 'unopened',
+        createdByAction: createdByAction,
+      }, createdBy);
+
+      return pushNotification;
     }
-    else
+    catch(err)
     {
-      return false;
+      console.log(err);
+      return null;
     }
-
-    const params =
-    {
-      'ApplicationId': Pusher.#instance.#pinpointAppId,
-      'MessageRequest': messageRequest
-    };
-
-    console.log(messageRequest);
-
-    const pusher = await Pusher.GetInstance();
-    const result = await pusher.awsClient().sendMessages(params).promise();
-    console.log(result.MessageResponse.RequestId);
-    console.log(JSON.stringify(result.MessageResponse.Result));
-
-    const pushNotification = await mPushNotification.create(
-    {
-      notification: notification._id,
-      onOpenAction: onOpenAction,
-      pushToken: pushToken,
-      url: url,
-      result: 'unopened',
-      createdByAction: createdByAction,
-    }, createdBy);
-
-    return pushNotification;
   }
 
   /**

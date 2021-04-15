@@ -57,7 +57,6 @@ Router.post('/geofence', async (req, res) =>
       console.log(location);
       if(!location.latitude ||
          !location.longitude ||
-         !location.accuracy ||
          !location.accuracy)
   		{
   			res.status(200).send({ error: 'Missing params' });
@@ -89,6 +88,7 @@ Router.post('/geofence', async (req, res) =>
 
         if(!prevNotification)
         {
+					console.log('Triggering geofence notification for area: ' + geofenceArea._id.toString());
           const createParams =
           {
             entityId: geofenceArea._id,
