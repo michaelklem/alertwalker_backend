@@ -118,8 +118,7 @@ Router.post('/init', async (req, res) =>
 		const mConfiguration = modelMgr.getModel('configuration');
 
 		// Frontend URL
-		let frontendUrl = await mConfiguration.findOne({ name: 'FRONTEND_URL '});
-		frontendUrl = frontendUrl.value;
+		let frontendUrl = '';
 
 		let oauthTokens =
 		{
