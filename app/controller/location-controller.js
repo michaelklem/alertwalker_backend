@@ -62,6 +62,9 @@ Router.post('/geofence', async (req, res) =>
   			res.status(200).send({ error: 'Missing params' });
   		}
 
+			var d = new Date();
+      d.setHours(d.getHours() - 2);
+
       const geofenceAreas = await mGeofenceArea.find({
         location:
         {
@@ -74,7 +77,11 @@ Router.post('/geofence', async (req, res) =>
               coordinates: [location.longitude, location.latitude]
             }
           }
-        }
+        },
+				createdOn:
+				{
+					$gte: d
+				}
       });
 
       // Send push notification for all geofence areas
