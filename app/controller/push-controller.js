@@ -310,14 +310,38 @@ Router.use(BodyParser.json());
  			return res.status(200).send({ error: decodedTokenResult.error });
  		}
 
-		const modelMgr = ModelManager.GetInstance();
-		const mPushToken = modelMgr.getModel('pushtoken');
-		const pushToken = await mPushToken.findOne({ createdBy: decodedTokenResult.user._id });
-		if(!pushToken)
+		if(!req.body.recipientId)
 		{
-			return res.status(200).send({ error: 'Could not find a push token for this user' });
+			return res.status(200).send({ error: "Missing recipient ID" });
 		}
-		const notification = await UtilityManager.GetInstance().get('pusher').SendWebPush(JSON.parse(pushToken.token));
+
+		const modelMgr = ModelManager.GetInstance();
+		const mNotification = modelMgr.getModel('notification');
+		const mUser = modelMgr.getModel('user');
+		const mGeofenceArea = modelMgr.getModel('geofencearea');
+
+		const user = mUser.findOne({ _id: req.body.recipientId });
+		const geofenceArea = mGeofenceArea.findOne({ _id: '607b9c412acc380004b395df' });
+
+		const createParams =
+		{
+			entityId: geofenceArea._id.toString(),
+			entityType: "geofencearea",
+			title: 'Alert near you!',
+			body: "test",
+			createdByAction: 'create',
+			recipient: user._id,
+			status: 'unread',
+		};
+		const notification = await mNotification.create(createParams, user._id);
+		await utilityMgr.get('pusher').SendPushNoSubscription(
+		{
+			notification: notification,
+			entity: geofenceArea,
+			createdByUserId: user._id
+		});
+
+
 		return res.status(200).send({
 			error: null,
 			token: decodedTokenResult.token,
