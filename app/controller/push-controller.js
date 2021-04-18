@@ -320,8 +320,8 @@ Router.use(BodyParser.json());
 		const mUser = modelMgr.getModel('user');
 		const mGeofenceArea = modelMgr.getModel('geofencearea');
 
-		const user = mUser.findOne({ _id: req.body.recipientId });
-		const geofenceArea = mGeofenceArea.findOne({ _id: '607b9c412acc380004b395df' });
+		const user = await mUser.findOne({ _id: req.body.recipientId });
+		const geofenceArea = await mGeofenceArea.findOne({ _id: '607b9c412acc380004b395df' });
 
 		const createParams =
 		{
