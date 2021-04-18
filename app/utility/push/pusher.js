@@ -345,7 +345,7 @@ class Pusher
         {
           'Addresses':
           {
-            [pushToken.token]:
+            [pushToken.token.token]:
             {
               'ChannelType' : 'GCM'
             }
