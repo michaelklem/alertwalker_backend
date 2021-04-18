@@ -315,6 +315,7 @@ Router.use(BodyParser.json());
 			return res.status(200).send({ error: "Missing recipient ID" });
 		}
 
+		const utilityMgr = UtilityManager.GetInstance();
 		const modelMgr = ModelManager.GetInstance();
 		const mNotification = modelMgr.getModel('notification');
 		const mUser = modelMgr.getModel('user');
