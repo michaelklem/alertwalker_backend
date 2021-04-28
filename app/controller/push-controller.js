@@ -391,6 +391,11 @@ Router.post('/token', async (req, res) =>
 																																											 	req.headers['x-device-service-name'],
 																																										 	 	req.headers['x-device-id'],
 																																										 	 	req.body.token);
+
+		// TODO: Check if the same push token exists for this user multiple times, if so delete all but 1
+		// Somehow this route is being called multiple times in the same second.
+
+		
 		return res.status(200).send({
 			error: null,
 			token: decodedTokenResult.token,

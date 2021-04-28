@@ -360,7 +360,9 @@ class Pusher
               'SilentPush': false,
               'Title': notification.title,
               'TimeToLive': 30,
-              'Url': url
+              'Url': notification._id.toString(),
+              // Defining 'RawContent' here, everything ("message") else in the "MessageConfiguration" will be ignored
+              'RawContent' : '{"notification":{"title":"' + notification.title + '","body":"' + body + '","url": "' + notification._id.toString() + '","action":"' + onOpenAction + '"}}', 
             }
           }
         };
