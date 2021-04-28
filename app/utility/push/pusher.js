@@ -341,6 +341,22 @@ class Pusher
       }
       else if(pushToken.service == 'android')
       {
+        const rawContent =
+        {
+          notification:
+          {
+            title: notification.title,
+            body: body,
+          },
+          data:
+          {
+            title: notification.title,
+            body: body,
+            deeplink: notification._id.toString(),
+            action: onOpenAction
+          }
+        };
+
         messageRequest =
         {
           'Addresses':
@@ -362,7 +378,7 @@ class Pusher
               'TimeToLive': 30,
               'Url': notification._id.toString(),
               // Defining 'RawContent' here, everything ("message") else in the "MessageConfiguration" will be ignored
-              'RawContent' : '{"notification":{"title":"' + notification.title + '","body":"' + body + '","url": "' + notification._id.toString() + '","action":"' + onOpenAction + '"}}', 
+              'RawContent' : JSON.stringify(rawContent)
             }
           }
         };
