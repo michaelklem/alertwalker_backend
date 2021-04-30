@@ -347,6 +347,7 @@ class Pusher
           {
             title: notification.title,
             body: body,
+            sound: "default",
           },
           data:
           {
