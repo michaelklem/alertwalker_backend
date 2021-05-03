@@ -20,6 +20,9 @@ class Pusher
   #modelMgr = null;
   #notificationMgr = null;
 
+  // Must match what is defined in mobile PushManager.#channelId
+  #androidChannelId = 'alert-walker-channel';
+
   #pinpointAppId = '';
 
   constructor()
@@ -354,7 +357,8 @@ class Pusher
             title: notification.title,
             body: body,
             deeplink: notification._id.toString(),
-            action: onOpenAction
+            action: onOpenAction,
+            android_channel_id: Pusher.#instance.#androidChannelId
           }
         };
 
