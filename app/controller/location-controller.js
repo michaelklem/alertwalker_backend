@@ -175,46 +175,43 @@ Router.post('/map', async (req, res) =>
    const utilityMgr = UtilityManager.GetInstance();
    const modelMgr = ModelManager.GetInstance();
    const mGeofenceArea = modelMgr.getModel('geofencearea');
+   const mConfiguration = modelMgr.getModel('configuration');
+   let mapDisplayAlertRadius = await mConfiguration.findOne({ name: 'MAP_DISPLAY_ALERT_RADIUS' });
+   mapDisplayAlertRadius = parseInt(mapDisplayAlertRadius.value);
 
-   console.log(req.body);
-
-   /*await Promise.all(req.body.map( async(location, i) =>
+   if(!req.body.location.latitude ||
+      !req.body.location.longitude ||
+      !req.body.location.accuracy)
    {
-     console.log(location);
-     if(!location.latitude ||
-        !location.longitude ||
-        !location.accuracy)
+     res.status(200).send({ error: 'Missing params' });
+   }
+
+   // Filter alerts more than 2 hours old
+   var d = new Date();
+   d.setHours(d.getHours() - 2);
+
+   const geofenceAreas = await mGeofenceArea.find({
+     location:
      {
-       res.status(200).send({ error: 'Missing params' });
-     }
-
-     var d = new Date();
-     d.setHours(d.getHours() - 2);
-
-     const geofenceAreas = await mGeofenceArea.find({
-       location:
+       // Filter by alerts near us
+       $near:
        {
-         $near:
+         $maxDistance: mapDisplayAlertRadius,
+         $geometry:
          {
-           $maxDistance: 500,
-           $geometry:
-           {
-             type: 'Point',
-             coordinates: [location.longitude, location.latitude]
-           }
+           type: 'Point',
+           coordinates: [req.body.location.longitude, req.body.location.latitude]
          }
-       },
-       createdOn:
-       {
-         $gte: d
        }
-     });
-
-     return true;
-   }));*/
+     },
+     createdOn:
+     {
+       $gte: d
+     }
+   });
 
    // Success
-   res.status(200).send({ results: true, error: null, token: decodedTokenResult.token });
+   res.status(200).send({ results: geofenceAreas, error: null, token: decodedTokenResult.token });
  }
  catch(err)
  {
