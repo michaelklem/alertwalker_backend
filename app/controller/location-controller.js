@@ -179,11 +179,12 @@ Router.post('/map', async (req, res) =>
    let mapDisplayAlertRadius = await mConfiguration.findOne({ name: 'MAP_DISPLAY_ALERT_RADIUS' });
    mapDisplayAlertRadius = parseInt(mapDisplayAlertRadius.value);
 
+   console.log(req.body);
    if(!req.body.location.latitude ||
       !req.body.location.longitude ||
       !req.body.location.accuracy)
    {
-     res.status(200).send({ error: 'Missing params' });
+     return res.status(200).send({ error: 'Missing params' });
    }
 
    // Filter alerts more than 2 hours old
