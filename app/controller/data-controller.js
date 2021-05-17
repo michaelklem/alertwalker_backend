@@ -12,7 +12,6 @@ Router.use(BodyParser.json({ limit: '50mb' }));
 /**
 	API routes providing data related tools such as retrieval, updating, and removing.
   @module data/
- 	@ignore
  */
 
 
@@ -28,7 +27,6 @@ Router.use(BodyParser.json({ limit: '50mb' }));
 	@bodyparam 	{String}	model 	  Model record belongs to
 	@bodyparam 	{JSON}		params 		Params we can pass directly to Mongo that map to Core Model schema for model
   @return {Mongo.document}  Newly created document
-	@ignore
 */
 Router.post('/create', async (req, res) =>
 {
@@ -141,13 +139,15 @@ Router.post('/create', async (req, res) =>
 
 /**
  	@name delete
- 	@function
- 	@inner
- 	@description Delete documents for particular model
- 	@param 	{JWT} 	"headers[x-access-token]"		Token to decrypt
-  @param 	{String}	model 	  Model record belongs to
- 	@param 	{Array.<String>}	id 	Contains array or string of object IDs to delete
-  @return {Mongo.document}  Newly created document
+	@route {POST}	/delete
+	@description Delete a document for specified model
+	@authentication Requires a valid x-access-token
+	@headerparam 	{JWT} 	x-access-token		Token to decrypt
+	@headerparam	{String}	x-request-source 	(web|mobile)
+	@headerparam 	{GUID}	x-device-id 	Unique ID of device calling API
+	@headerparam 	{String}	x-device-service-name 	(ios|android|chrome|safari)
+	@bodyparam 	{String}	model 	  Model record belongs to
+ 	@bodyparam 	{Array.<String>}	id 	Contains array or string of object IDs to delete
 */
 Router.post('/delete', async (req, res) =>
 {
@@ -232,6 +232,7 @@ Router.post('/delete', async (req, res) =>
   @param  {String}      name 				Model to filter on
   @returns  {Map.<String, Array.<Mongo.document>>} Map of attachable models.fieldName with array of documents for specific model attachable
 	Format: {component.field_name: [Documents]}
+	@ignore
  */
 Router.post('/find-attachable', async (req, res) =>
 {
@@ -331,12 +332,15 @@ Router.post('/find-attachable', async (req, res) =>
 
 /**
   @name query
-  @function
-  @inner
-  @description Query Model documents
-  @param 	{JWT}   "headers[x-access-token]"		Token to decrypt
-  @param  {JSON}        params 			Query parameters to filter documents (MongoDB)
-  @param  {String}      name 				Model to query on
+	@route {POST}	/query
+ 	@description Query a document(s) for specified model
+ 	@authentication Requires a valid x-access-token
+ 	@headerparam 	{JWT} 	x-access-token		Token to decrypt
+ 	@headerparam	{String}	x-request-source 	(web|mobile)
+ 	@headerparam 	{GUID}	x-device-id 	Unique ID of device calling API
+ 	@headerparam 	{String}	x-device-service-name 	(ios|android|chrome|safari)
+  @bodyparam  {JSON}        params 			Query parameters to filter documents (MongoDB)
+  @bodyparam  {String}      name 				Model to query on
   @returns  {Array.<Mongo.document>} Array of documents for specific model requested
  */
 Router.post('/query', async (req, res) =>
@@ -433,13 +437,17 @@ Router.post('/query', async (req, res) =>
 
 /**
   @name update
-  @function
-  @inner
-  @description Update a record for a particular model
-  @param 	{JWT} 	"headers[x-access-token]"		Token to decrypt
-  @param 	{Array.<FormFields>} fields 			Parameters to update in document (MongoDB)
-  @param 	{String}			model 		  Model record belongs to
-  @param  {String}      id          Object ID of the record to update
+	@route {POST}	/update
+ 	@description Update a document for specified model
+ 	@authentication Requires a valid x-access-token
+ 	@headerparam 	{JWT} 	x-access-token		Token to decrypt
+ 	@headerparam	{String}	x-request-source 	(web|mobile)
+ 	@headerparam 	{GUID}	x-device-id 	Unique ID of device calling API
+ 	@headerparam 	{String}	x-device-service-name 	(ios|android|chrome|safari)
+  @bodyparam 	{JWT} 	"headers[x-access-token]"		Token to decrypt
+  @bodyparam 	{Array.<FormFields>} fields 			Parameters to update in document (MongoDB)
+  @bodyparam 	{String}			model 		  Model record belongs to
+  @bodyparam  {String}      id          Object ID of the record to update
   @returns {Mongo.document} Updated document
 */
 Router.post('/update', async (req, res) =>

@@ -81,6 +81,10 @@ Router.post('/geofence', async (req, res) =>
 				createdOn:
 				{
 					$gte: d
+				},
+				createdBy:
+				{
+					$ne: decodedTokenResult.user._id
 				}
       });
 
@@ -131,6 +135,92 @@ Router.post('/geofence', async (req, res) =>
     console.log(err);
     res.status(200).send({ error: err });
 	}
+});
+
+
+/**
+ @name Map
+ @route {POST}	/map
+ @description Query nearby geofence area's for user
+ @authentication Requires a valid x-access-token
+ @headerparam 	{JWT} 	x-access-token		Token to decrypt
+ @headerparam	{String}	x-request-source 	(web|mobile)
+ @headerparam 	{GUID}	x-device-id 	Unique ID of device calling API
+ @headerparam 	{String}	x-device-service-name 	(ios|android|chrome|safari)
+ @bodyparam 	{String}  longitude   The longitude
+ @bodyparam 	{String}  latitude   The latitude
+ @bodyparam 	{String?}  accuracy   The accuracy (optional)
+ @return {Array.<MongoDocument.<GeofenceArea>>}  List of genfence areas meeting this user's location
+*/
+Router.post('/map', async (req, res) =>
+{
+ let decodedTokenResult = null;
+ try
+ {
+   // Validate headers
+   const headerValidation = await Ext.validateHeaders(req.headers);
+   if(headerValidation.error !== null)
+   {
+     return res.status(200).send({ error: headerValidation.error });
+   }
+
+   // Validate user
+   decodedTokenResult = await Ext.validateToken(req.headers['x-access-token']);
+   if(decodedTokenResult.error !== null)
+   {
+     return res.status(200).send({ error: decodedTokenResult.error });
+   }
+
+   // Find geofenced areas nearby
+   const utilityMgr = UtilityManager.GetInstance();
+   const modelMgr = ModelManager.GetInstance();
+   const mGeofenceArea = modelMgr.getModel('geofencearea');
+
+   console.log(req.body);
+
+   /*await Promise.all(req.body.map( async(location, i) =>
+   {
+     console.log(location);
+     if(!location.latitude ||
+        !location.longitude ||
+        !location.accuracy)
+     {
+       res.status(200).send({ error: 'Missing params' });
+     }
+
+     var d = new Date();
+     d.setHours(d.getHours() - 2);
+
+     const geofenceAreas = await mGeofenceArea.find({
+       location:
+       {
+         $near:
+         {
+           $maxDistance: 500,
+           $geometry:
+           {
+             type: 'Point',
+             coordinates: [location.longitude, location.latitude]
+           }
+         }
+       },
+       createdOn:
+       {
+         $gte: d
+       }
+     });
+
+     return true;
+   }));*/
+
+   // Success
+   res.status(200).send({ results: true, error: null, token: decodedTokenResult.token });
+ }
+ catch(err)
+ {
+   console.log(err);
+   res.status(200).send({ error: err });
+ }
 });
 
 

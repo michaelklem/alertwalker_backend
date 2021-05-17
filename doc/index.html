@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
 				<ul class="dropdown-menu inline">
-					<li><a href="module-location_.html">location/</a></li><li><a href="module-notification_.html">notification/</a></li><li><a href="module-oauth_.html">oauth/</a></li><li><a href="module-users_.html">users/</a></li>
+					<li><a href="module-data_.html">data/</a></li><li><a href="module-location_.html">location/</a></li><li><a href="module-notification_.html">notification/</a></li><li><a href="module-oauth_.html">oauth/</a></li><li><a href="module-users_.html">users/</a></li>
 				</ul>
 			</li>
 			
@@ -96,6 +96,149 @@
 <pre class="prettyprint source lang-json"><code>apiURL/oauth/login
 </code></pre>
 </li>
+</ul>
+<h1>Collections</h1>
+<ul>
+<li>
+<p>authorizations</p>
+<ul>
+<li>The authorization types a user can have assigned to them.</li>
+<li>A user can only have one authorization type.</li>
+<li>This is useful if you have different roles in your application but Alert Walker has only one role &quot;customer&quot;.</li>
+</ul>
+</li>
+<li>
+<p>components</p>
+<ul>
+<li>Not currently used in the app.</li>
+</ul>
+</li>
+<li>
+<p>configurations</p>
+<ul>
+<li>Editable configuration options that will change how the app functions.</li>
+<li>For example the S3 bucket where files are uploaded to.</li>
+<li>The AWS Pinpoint app ID for triggering push notifications.</li>
+</ul>
+</li>
+<li>
+<p>eventsubscriptions</p>
+<ul>
+<li>This is how the app knows for what events to trigger a notification for.</li>
+<li>This uses the collection &quot;subscribableevents&quot;.</li>
+<li>When a user signs up they will get a 1 record created in this collection for each record that exists in &quot;subscribableevents&quot;.</li>
+<li>When an API call is made to the /data route is will either be creating, querying, updating, or deleting (the action).
+<ul>
+<li>If there is a subscribableevent for this action it will lookup all event eventsubscriptions for that event and trigger the proper notification.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>fields</p>
+<ul>
+<li>Not currently used in the app.</li>
+</ul>
+</li>
+<li>
+<p>files</p>
+<ul>
+<li>This is where any files that are uploaded are stored.</li>
+</ul>
+</li>
+<li>
+<p>geofenceareas</p>
+<ul>
+<li>Any alerts created by users are stored in this collection.</li>
+</ul>
+</li>
+<li>
+<p>logs</p>
+<ul>
+<li>The system will log various events or errors that occur using the app/model/log class.</li>
+<li>For example when a password is reset it is logged here that the event occurred for auditing purposes.</li>
+</ul>
+</li>
+<li>
+<p>models</p>
+<ul>
+<li>All of the collections are stored in the database as &quot;models&quot;.</li>
+<li>Models have schema fields which define the individual fields for that collection/model.</li>
+<li>Internally used by the backend, I don't recommend playing around with this collection.</li>
+</ul>
+</li>
+<li>
+<p>notifications</p>
+<ul>
+<li>This is a notification sent from the application.</li>
+<li>It contains the data of the notification for example the title and body.</li>
+</ul>
+</li>
+<li>
+<p>oauthtokens</p>
+<ul>
+<li>This is a third party OAuth token from Google.</li>
+<li>It is returned after a user signs in with Google.</li>
+</ul>
+</li>
+<li>
+<p>pages</p>
+<ul>
+<li>Some pages in the app such as the home screen and authentication screens utilize this collection.</li>
+<li>This allows for dynamically adding fields to screens such as the registration screen.</li>
+</ul>
+</li>
+<li>
+<p>pushnotifications</p>
+<ul>
+<li>This is the log of the push notification that was sent.</li>
+<li>It will contain the parameters passed into the API that sends the push token for easier debugging.</li>
+</ul>
+</li>
+<li>
+<p>pushtokens</p>
+<ul>
+<li>This is a token from Google or Apple that allows us to send a push notification to a user's specific device.</li>
+</ul>
+</li>
+<li>
+<p>schemafields</p>
+<ul>
+<li>These are the fields that a model contains.</li>
+<li>Internally used by the backend, I don't recommend playing around with this collection.</li>
+</ul>
+</li>
+<li>
+<p>subscribableevents</p>
+<ul>
+<li>An event that a user can be subscribed to so that they receive notifications for specific events in the app.</li>
+</ul>
+</li>
+<li>
+<p>thirdpartyaccounts</p>
+<ul>
+<li>A third party account such as Google.</li>
+<li>This is how we know what user is associated with what third party account.</li>
+</ul>
+</li>
+<li>
+<p>tokens</p>
+<ul>
+<li>This is the Javascript Web Token that the mobile app uses for communicating with the backend.</li>
+</ul>
+</li>
+<li>
+<p>users</p>
+<ul>
+<li>Users of the application.</li>
+</ul>
+</li>
+<li>
+<p>verifications</p>
+<ul>
+<li>When a user initiates a password reset a verification request is created here.</li>
+</ul>
+</li>
 </ul></article>
     </section>
 
@@ -142,7 +285,7 @@
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a>
 	
-		on 2021-04-14T08:01:49-05:00
+		on 2021-05-05T18:01:48-05:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

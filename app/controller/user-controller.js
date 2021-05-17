@@ -16,17 +16,17 @@ Router.use(BodyParser.json({ limit: '50mb' }));
  */
 
 
-/**
-	@name Me
-	@route {POST}	/me
-	@description Retrieve settings for a user
-	@authentication Requires a valid x-access-token
-	@headerparam 	{JWT} 	x-access-token		Token to decrypt
-	@headerparam	{String}	x-request-source 	(web|mobile)
-	@headerparam 	{GUID}	x-device-id 	Unique ID of device calling API
-	@headerparam 	{String}	x-device-service-name 	(ios|android|chrome|safari)
-	@returns {MongoDocument.<User>}
- */
+ /**
+ 	@name Me
+ 	@route {POST}	/me
+ 	@description Retrieve settings for a user
+ 	@authentication Requires a valid x-access-token
+ 	@headerparam 	{JWT} 	x-access-token		Token to decrypt
+ 	@headerparam	{String}	x-request-source 	(web|mobile)
+ 	@headerparam 	{GUID}	x-device-id 	Unique ID of device calling API
+ 	@headerparam 	{String}	x-device-service-name 	(ios|android|chrome|safari)
+ 	@returns {MongoDocument.<User>}
+  */
 Router.post('/me', async (req, res) =>
 {
 	try
@@ -80,7 +80,7 @@ Router.post('/me', async (req, res) =>
 	}
 });
 
-/**90
+/**
 	@name Update
 	@route {POST}	/update
 	@description Update user settings

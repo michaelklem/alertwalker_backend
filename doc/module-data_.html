@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Alert Walker Module: notification/</title>
+	<title>Alert Walker Module: data/</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -65,7 +65,7 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Module: notification/</h1>
+	<h1 class="page-title">Module: data/</h1>
 <section>
 
 <header>
@@ -77,7 +77,7 @@
     <div class="container-overview">
     
         
-            <div class="description">API routes providing system-notification related functionality</div>
+            <div class="description">API routes providing data related tools such as retrieval, updating, and removing.</div>
         
 
         
@@ -140,8 +140,8 @@
         <dl>
             
 <hr>
-<dt class="name" id="Initialize">
-    <h4 id="Initialize"><span class="type-signature">&lt;route> </span>Initialize<span class="type-signature"></span></h4>
+<dt class="name" id="Create">
+    <h4 id="Create"><span class="type-signature">&lt;route> </span>Create<span class="type-signature"></span></h4>
 
     
 </dt>
@@ -153,10 +153,10 @@
                             <thead><tr><th>Method</th><th class="last">Path</th></tr></thead>
                             <tr>
                             <td class="type">POST</td>
-                            <td class="name last">/init</td>
+                            <td class="name last">/create</td>
                             </tr>
                             </table>
-                            Retrieve notifications for a user
+                            Create a new Model document
                           <h5>Authentication</h5>
                           <p>Requires a valid x-access-token</p>
                             <h5>Body Parameters:</h5>
@@ -171,11 +171,17 @@
               </tr>
             </thead>
             <tr>
-            <td class="name">id</td>
+            <td class="name">model</td>
             <td class="type">String</td>
             
             
-            <td class="description last">ID of call to reject</td>
+            <td class="description last">Model record belongs to</td>
+          </tr><tr>
+            <td class="name">params</td>
+            <td class="type">JSON</td>
+            
+            
+            <td class="description last">Params we can pass directly to Mongo that map to Core Model schema for model</td>
           </tr>
           </table>
                             <h5>Header Parameters:</h5>
@@ -266,8 +272,8 @@
         
             
 <hr>
-<dt class="name" id="MarkRead">
-    <h4 id="MarkRead"><span class="type-signature">&lt;route> </span>Mark Read<span class="type-signature"></span></h4>
+<dt class="name" id="delete">
+    <h4 id="delete"><span class="type-signature">&lt;route> </span>delete<span class="type-signature"></span></h4>
 
     
 </dt>
@@ -279,10 +285,10 @@
                             <thead><tr><th>Method</th><th class="last">Path</th></tr></thead>
                             <tr>
                             <td class="type">POST</td>
-                            <td class="name last">/mark-read</td>
+                            <td class="name last">/delete</td>
                             </tr>
                             </table>
-                            Mark notifications as read
+                            Delete a document for specified model
                           <h5>Authentication</h5>
                           <p>Requires a valid x-access-token</p>
                             <h5>Body Parameters:</h5>
@@ -297,11 +303,17 @@
               </tr>
             </thead>
             <tr>
-            <td class="name">ids</td>
+            <td class="name">model</td>
+            <td class="type">String</td>
+            
+            
+            <td class="description last">Model record belongs to</td>
+          </tr><tr>
+            <td class="name">id</td>
             <td class="type">Array.<String></td>
             
             
-            <td class="description last">IDs of notifications to update</td>
+            <td class="description last">Contains array or string of object IDs to delete</td>
           </tr>
           </table>
                             <h5>Header Parameters:</h5>
@@ -392,8 +404,8 @@
         
             
 <hr>
-<dt class="name" id="Read">
-    <h4 id="Read"><span class="type-signature">&lt;route> </span>Read<span class="type-signature"></span></h4>
+<dt class="name" id="query">
+    <h4 id="query"><span class="type-signature">&lt;route> </span>query<span class="type-signature"></span></h4>
 
     
 </dt>
@@ -405,10 +417,10 @@
                             <thead><tr><th>Method</th><th class="last">Path</th></tr></thead>
                             <tr>
                             <td class="type">POST</td>
-                            <td class="name last">/read</td>
+                            <td class="name last">/query</td>
                             </tr>
                             </table>
-                            Read a single notification
+                            Query a document(s) for specified model
                           <h5>Authentication</h5>
                           <p>Requires a valid x-access-token</p>
                             <h5>Body Parameters:</h5>
@@ -423,11 +435,161 @@
               </tr>
             </thead>
             <tr>
+            <td class="name">params</td>
+            <td class="type">JSON</td>
+            
+            
+            <td class="description last">Query parameters to filter documents (MongoDB)</td>
+          </tr><tr>
+            <td class="name">name</td>
+            <td class="type">String</td>
+            
+            
+            <td class="description last">Model to query on</td>
+          </tr>
+          </table>
+                            <h5>Header Parameters:</h5>
+          <table class="params">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Type</th>
+                
+                
+                <th class="last">Description</th>
+              </tr>
+            </thead>
+            <tr>
+            <td class="name">x-access-token</td>
+            <td class="type">JWT</td>
+            
+            
+            <td class="description last">Token to decrypt</td>
+          </tr><tr>
+            <td class="name">x-request-source</td>
+            <td class="type">String</td>
+            
+            
+            <td class="description last">(web|mobile)</td>
+          </tr><tr>
+            <td class="name">x-device-id</td>
+            <td class="type">GUID</td>
+            
+            
+            <td class="description last">Unique ID of device calling API</td>
+          </tr><tr>
+            <td class="name">x-device-service-name</td>
+            <td class="type">String</td>
+            
+            
+            <td class="description last">(ios|android|chrome|safari)</td>
+          </tr>
+          </table>
+    </div>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="update">
+    <h4 id="update"><span class="type-signature">&lt;route> </span>update<span class="type-signature"></span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <h5>Route:</h5>
+                            <table class="params">
+                            <thead><tr><th>Method</th><th class="last">Path</th></tr></thead>
+                            <tr>
+                            <td class="type">POST</td>
+                            <td class="name last">/update</td>
+                            </tr>
+                            </table>
+                            Update a document for specified model
+                          <h5>Authentication</h5>
+                          <p>Requires a valid x-access-token</p>
+                            <h5>Body Parameters:</h5>
+          <table class="params">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Type</th>
+                
+                
+                <th class="last">Description</th>
+              </tr>
+            </thead>
+            <tr>
+            <td class="name">"headers[x-access-token]"</td>
+            <td class="type">JWT</td>
+            
+            
+            <td class="description last">Token to decrypt</td>
+          </tr><tr>
+            <td class="name">fields</td>
+            <td class="type">Array.<FormFields></td>
+            
+            
+            <td class="description last">Parameters to update in document (MongoDB)</td>
+          </tr><tr>
+            <td class="name">model</td>
+            <td class="type">String</td>
+            
+            
+            <td class="description last">Model record belongs to</td>
+          </tr><tr>
             <td class="name">id</td>
             <td class="type">String</td>
             
             
-            <td class="description last">ID of notification to read</td>
+            <td class="description last">Object ID of the record to update</td>
           </tr>
           </table>
                             <h5>Header Parameters:</h5>
