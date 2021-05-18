@@ -181,8 +181,7 @@ Router.post('/map', async (req, res) =>
 
    console.log(req.body);
    if(!req.body.location.latitude ||
-      !req.body.location.longitude ||
-      !req.body.location.accuracy)
+      !req.body.location.longitude)
    {
      return res.status(200).send({ error: 'Missing params' });
    }
