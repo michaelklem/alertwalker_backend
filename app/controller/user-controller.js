@@ -15,6 +15,22 @@ Router.use(BodyParser.json({ limit: '50mb' }));
   @module users/
  */
 
+Router.get('/test', async (req, res) =>
+{
+	try
+	{
+		// Success
+		res.status(200).send({
+			error: null,
+			results: "Test OK",
+		});
+	}
+	catch(err)
+	{
+		console.log(err);
+		res.status(200).send({ error: 'Failed for test.' });
+	}
+});
 
  /**
  	@name Me

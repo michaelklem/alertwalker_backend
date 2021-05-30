@@ -38,20 +38,21 @@ class WebsocketServer
     }
     try
     {
+      console.log('[WebsocketServer] httpServer: ' + httpServer);
       this.#wsServer = new Ws.Server({ server: httpServer, path: '/' });
 
       // When client connects
       this.#wsServer.on('connection', (connection, req, client) =>
       {
         const id = uuid();
-        console.log('Client connected');
+        console.log('[WebsocketServer] Client connected');
 
-        connection.on('open', () => { console.log('Connection opened'); });
+        connection.on('open', () => { console.log('[WebsocketServer] Connection opened'); });
 
         // When client disconnects
         connection.on('close', () =>
         {
-          console.log('Client disconnected')
+          console.log('[WebsocketServer] Client disconnected')
         });
 
         // When message received from client
@@ -60,7 +61,7 @@ class WebsocketServer
         // Error received from client
         connection.on('error', (err) =>
         {
-          console.log(err);
+          console.log('[WebsocketServer] ' + err);
         });
       });
 
@@ -72,11 +73,11 @@ class WebsocketServer
         clearInterval(this.#heartbeatInterval);
       });
 
-      console.log(`WebsocketServer initialized`);
+      console.log(`[WebsocketServer] WebsocketServer initialized`);
     }
     catch(err)
     {
-      console.log('WebsocketServer error: ' + err + '\nError stack: ' + err.stack);
+      console.log('[WebsocketServer] WebsocketServer error: ' + err + '\nError stack: ' + err.stack);
     }
   }
 
@@ -84,12 +85,12 @@ class WebsocketServer
   {
     if(this.#clients[userId])
     {
-      console.log('WebsocketServer sending notification to: ' + userId);
+      console.log('[WebsocketServer] WebsocketServer sending notification to: ' + userId);
       this.#clients[userId].connection.send(JSON.stringify({type: 'notification', notification: notification}));
     }
     else
     {
-      console.log('WebsocketServer no active connection for: ' + userId);
+      console.log('[WebsocketServer] WebsocketServer no active connection for: ' + userId);
     }
   }
 
@@ -97,12 +98,12 @@ class WebsocketServer
   {
     if(this.#clients[userId])
     {
-      console.log('WebsocketServer sending geofencAarea to: ' + userId);
+      console.log('[WebsocketServer] WebsocketServer sending geofencAarea to: ' + userId);
       this.#clients[userId].connection.send(JSON.stringify({ type: 'geofenceArea', geofenceArea: geofenceArea }));
     }
     else
     {
-      console.log('WebsocketServer no active connection for: ' + userId);
+      console.log('[WebsocketServer] WebsocketServer no active connection for: ' + userId);
     }
   }
 
@@ -110,12 +111,12 @@ class WebsocketServer
   {
     if(this.#clients[userId])
     {
-      console.log('WebsocketServer sending answer to: ' + userId);
+      console.log('[WebsocketServer] WebsocketServer sending answer to: ' + userId);
       this.#clients[userId].connection.send(JSON.stringify({type: 'answerAudioCall', answer: answer}));
     }
     else
     {
-      console.log('WebsocketServer no active connection for: ' + userId);
+      console.log('[WebsocketServer] WebsocketServer no active connection for: ' + userId);
     }
   }
 
@@ -126,12 +127,12 @@ class WebsocketServer
   {
     if(this.#clients[userId])
     {
-      console.log('WebsocketServer sending decline call to: ' + userId);
+      console.log('[WebsocketServer] WebsocketServer sending decline call to: ' + userId);
       this.#clients[userId].connection.send(JSON.stringify({type: 'declineAudioCall', callId: callId}));
     }
     else
     {
-      console.log('WebsocketServer no active connection for: ' + userId);
+      console.log('[WebsocketServer] WebsocketServer no active connection for: ' + userId);
     }
   }
 
@@ -142,12 +143,12 @@ class WebsocketServer
   {
     if(this.#clients[otherUserId])
     {
-      console.log('WebsocketServer ice candidate to: ' + otherUserId);
+      console.log('[WebsocketServer] WebsocketServer ice candidate to: ' + otherUserId);
       this.#clients[otherUserId].connection.send(JSON.stringify({type: 'onIceCandidate', candidate: candidate}));
     }
     else
     {
-      console.log('WebsocketServer no active connection for: ' + otherUserId);
+      console.log('[WebsocketServer] WebsocketServer no active connection for: ' + otherUserId);
     }
   }
 
@@ -200,7 +201,7 @@ class WebsocketServer
       // Identify connection to user
       if(msg.type === 'token')
       {
-        console.log('websocket.onMessage(token)');
+        console.log('[WebsocketServer] websocket.onMessage(token)');
         if(msg.token !== 'guest')
         {
           const decodedTokenResult = await validateToken(msg.token);
@@ -214,7 +215,7 @@ class WebsocketServer
       // Keep connection alive
       else if(msg.type === 'heartbeat')
       {
-        console.log('websocket.onMessage(heartbeat): ' + msg.id);
+        console.log('[WebsocketServer] websocket.onMessage(heartbeat): ' + msg.id);
         this.#clients[msg.id].isAlive = true;
       }
 
