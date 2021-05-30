@@ -122,11 +122,13 @@ async function validateToken(token, requiredAuth)
 				const mToken = modelMgr.getModel('token');
 				if(!mToken)
 				{
+					console.log("Ext.validateToken - Expired token no token found.");
 					return {error: Environment.ERROR_MESSAGE, token: null, user: null};
 				}
 				const oldToken = await mToken.findOne({ jwt: token });
 				if(!oldToken)
 				{
+					console.log("Ext.validateToken - Expired token no available token for use.");
 					await Log.Error(__filename, '{ERR_5}-Bad validation attempt with invalid x-access-token: ' + token);
 					return {error: 'Invalid session. Please login again.', token: null, user: null};
 				}
@@ -151,14 +153,17 @@ async function validateToken(token, requiredAuth)
 				// Save new token
 				await mToken.create({ deviceId: oldToken.deviceId, jwt: newToken, userId: oldToken.userId });
 
+				console.log("Ext.validateToken - New token created {" + newToken + "} ");
 				return {error: null, token: newToken, user: user};
 			}
 			catch(err2)
 			{
+				console.log("Ext.validateToken - err2: " + err2);
 				await Log.Error(__filename, '{ERR_4}\nError:\n' + err2.message + '\nStack trace:\n' + err2.stack);
 				return {error: 'Invalid session. Please login again.', token: null, user: null};
 			}
 		}
+		console.log("Ext.validateToken - invalid session: " + err);
 		Log.Error(__filename, '{ERR_6} (' + token + ') - Error:' + err.message + '\nStack trace:\n' + err.stack);
 		return {error: 'Invalid session. Please login again.', token: null, user: null};
 	}
