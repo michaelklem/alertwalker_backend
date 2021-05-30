@@ -115,7 +115,7 @@ async function validateToken(token, requiredAuth)
 		// Refresh token
 		if(err.name === 'TokenExpiredError')
 		{
-			console.log("Ext.validateToken - Expired token used {" + token + "}");
+			console.log("Ext.validateToken - Expired token used {" + token + "} " + err.stack);
 			try
 			{
 				const modelMgr = ModelManager.GetInstance();
@@ -173,7 +173,7 @@ async function validateToken(token, requiredAuth)
 */
 async function createTokenForUser(userId, deviceId)
 {
-	//console.log('Creating token for user:' + userId);
+	console.log('Creating token for user:' + userId);
 	try
 	{
 		const jwtToken = JWT.sign({ id: userId }, Environment.JWT_TOKEN_KEY,

@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 // MARK: - Entry point
 const Environment   = require('./app/environment');
 const Ext 					= require('./app/extension');
