@@ -128,6 +128,7 @@ Router.post('/geofence', async (req, res) =>
 
 
 		// Success
+    console.log('[loation-controller] geofence returning with token: ' + decodedTokenResult.token)
 		res.status(200).send({ results: true, error: null, token: decodedTokenResult.token });
 	}
 	catch(err)
