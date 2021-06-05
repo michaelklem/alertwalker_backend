@@ -249,6 +249,8 @@ Router.post('/upload', async (req, res) =>
  */
 Router.post('/login', async (req, res) =>
 {
+	console.log('[user-controller.login] endpoint called')
+
 	try
 	{
 		// Validate headers

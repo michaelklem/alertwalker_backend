@@ -71,6 +71,19 @@ class UserManager
                 password,
                 thirdPartyAccount })
   {
+    console.log('[userManager.login] called')
+    console.log('[userManager.login] email: ' + email)
+    console.log('[userManager.login] source: ' + source)
+    console.log('[userManager.login] accessToken: ' + JSON.stringify(accessToken))
+    console.log('[userManager.login] firstName: ' + firstName)
+    console.log('[userManager.login] lastName: ' + lastName)
+    console.log('[userManager.login] externalId: ' + externalId)
+    console.log('[userManager.login] deviceId: ' + deviceId)
+    console.log('[userManager.login] requestSource: ' + requestSource)
+    console.log('[userManager.login] deviceServiceName: ' + deviceServiceName)
+    console.log('[userManager.login] password: ' + password)
+    console.log('[userManager.login] thirdPartyAccount: ' + thirdPartyAccount)
+
     const mAuthorization = this.#modelMgr.getModel('authorization');
 		const mEventSubscription = this.#modelMgr.getModel('eventsubscription');
 		const mSubscribableEvent = this.#modelMgr.getModel('subscribableevent');
@@ -197,6 +210,8 @@ class UserManager
                     requestSource,
                     deviceServiceName })
   {
+    console.log('[userManager.register] called')
+
     const mAuthorization = this.#modelMgr.getModel('authorization');
 		const mEventSubscription = this.#modelMgr.getModel('eventsubscription');
 		const mSubscribableEvent = this.#modelMgr.getModel('subscribableevent');

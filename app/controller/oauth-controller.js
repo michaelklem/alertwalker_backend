@@ -30,6 +30,8 @@ Router.use(BodyParser.json());
  */
 Router.post('/login', async (req, res) =>
 {
+	console.log('[oauth-controller.handler] login called');
+
 	try
 	{
 		// Validate headers
@@ -39,7 +41,7 @@ Router.post('/login', async (req, res) =>
 			return res.status(200).send({ error: headerValidation.error });
 		}
 
-		console.log(req.body);
+		console.log('[oauth-controller.handler] login req.body: ' + JSON.stringify(req.body) );
 
     if(!req.body.email && req.body.source !== 'apple')
     {
@@ -240,6 +242,8 @@ Router.post('/auth-url', async (req, res) =>
 			url = await OauthManager.GetInstance().microsoftAuthUrl(userId);
 		}
 
+		console.log('[oauth-controller.auth-url] url: ' + url);
+
 		res.status(200).send({
 			error: null,
 			token: decodedTokenResult.token,
@@ -264,7 +268,7 @@ Router.post('/auth-url', async (req, res) =>
   */
 Router.get('/handler', async (req, res) =>
 {
-	console.log(req.query);
+	console.log('[oauth-controller.handler] req.query: ' + JSON.stringify(req.query));
 
 	const modelMgr = ModelManager.GetInstance();
 	const mConfiguration = modelMgr.getModel('configuration');
@@ -281,6 +285,8 @@ Router.get('/handler', async (req, res) =>
 	{
 		redirectUrl += 'google&code=' + req.query.code;
 	}
+
+	console.log('[oauth-controller.handler] redirectUrl: ' + redirectUrl);
 	console.log(redirectUrl);
 	res.redirect(301, redirectUrl);
 });
@@ -295,6 +301,7 @@ Router.get('/handler', async (req, res) =>
   */
 Router.post('/convert', async (req, res) =>
 {
+	console.log('[oauth-controller] convert called ')
 	try
 	{
 		// Validate headers
@@ -399,6 +406,8 @@ Router.post('/convert', async (req, res) =>
   */
 Router.post('/remove-token', async (req, res) =>
 {
+	console.log('[oauth-controller.remove-token] called');
+
 	try
 	{
 		// Validate headers
@@ -426,6 +435,8 @@ Router.post('/remove-token', async (req, res) =>
 
 		const oAuthToken = await mOauthToken.delete({ createdBy:  decodedTokenResult.user._id, source: req.body.source });
 		const thirdPartyAccount = await mThirdPartyAccount.delete({ createdBy:  decodedTokenResult.user._id, source: req.body.source });
+
+		console.log('[oauth-controller.remove-token] completed');
 
 		res.status(200).send({
 			error: null,
@@ -532,6 +543,8 @@ Router.post('/save-token', async (req, res) =>
   */
 Router.post('/third-party-account', async (req, res) =>
 {
+	console.log('[oauth-controller] third-party-account called ')
+
 	try
 	{
 		// Validate headers

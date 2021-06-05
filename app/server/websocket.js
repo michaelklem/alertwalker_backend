@@ -38,7 +38,7 @@ class WebsocketServer
     }
     try
     {
-      console.log('[WebsocketServer] httpServer: ' + httpServer);
+      console.log('[WebsocketServer] httpServer: ' + JSON.stringify(httpServer));
       this.#wsServer = new Ws.Server({ server: httpServer, path: '/' });
 
       // When client connects
