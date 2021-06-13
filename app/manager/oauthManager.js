@@ -72,6 +72,8 @@ class OauthManager
   */
   async googleOAuthClient(userId)
   {
+    console.log('[googleOAuthClient] called with ' + userId);
+
     let client = null;
     let userExists = false;
 
@@ -85,6 +87,7 @@ class OauthManager
     // Check if we have a token we can create a client from
     else
     {
+      console.log('[googleOAuthClient] calling Google.auth.OAuth2 with GoogleCredentials.web.client_id: ' + GoogleCredentials.web.client_id );
       client = new Google.auth.OAuth2(GoogleCredentials.web.client_id,
                                         GoogleCredentials.web.client_secret,
                                         GoogleCredentials.web.redirect_uris[1]);
