@@ -52,7 +52,7 @@ class WebsocketServer
         // When client disconnects
         connection.on('close', () =>
         {
-          console.log('[WebsocketServer] Client disconnected')
+          console.log('[WebsocketServer] Client disconnected from close message')
         });
 
         // When message received from client
@@ -70,10 +70,11 @@ class WebsocketServer
 
       this.#wsServer.on('close', () =>
       {
+        console.log('[WebsocketServer] Stopping heartbeat')
         clearInterval(this.#heartbeatInterval);
       });
 
-      console.log(`[WebsocketServer] WebsocketServer initialized`);
+      console.log(`[WebsocketServer] WebsocketServer initialized from close message`);
     }
     catch(err)
     {
@@ -194,9 +195,8 @@ class WebsocketServer
   {
     try
     {
-      //console.log('On message');
       const msg = JSON.parse(strMsg);
-      //console.log(msg);
+      console.log('[WebsocketServer] onMessage type: ' + msg.type);
 
       // Identify connection to user
       if(msg.type === 'token')
@@ -208,14 +208,15 @@ class WebsocketServer
           if(decodedTokenResult.error === null)
           {
             this.#clients[decodedTokenResult.user._id] = {connection: connection, isAlive: true};
-            console.log(decodedTokenResult.user._id + ' is connected: ' + this.#clients[decodedTokenResult.user._id].isAlive);
+            // console.log(decodedTokenResult.user._id + ' is connected: ' + this.#clients[decodedTokenResult.user._id].isAlive);
+            console.log(`[WebsocketServer] decodedTokenResult.user._id: ${decodedTokenResult.user._id} is connected: ${this.#clients[decodedTokenResult.user._id].isAlive}`);
           }
         }
       }
       // Keep connection alive
       else if(msg.type === 'heartbeat')
       {
-        console.log('[WebsocketServer] websocket.onMessage(heartbeat): ' + msg.id);
+        console.log('[WebsocketServer] websocket.onMessage(heartbeat) client id: ' + msg.id);
         this.#clients[msg.id].isAlive = true;
       }
 
