@@ -52,7 +52,7 @@ class WebsocketServer
         // When client disconnects
         connection.on('close', () =>
         {
-          console.log('[WebsocketServer] Client disconnected from close message')
+          console.log('[WebsocketServer] onClose Client disconnected from close message')
         });
 
         // When message received from client
@@ -70,7 +70,7 @@ class WebsocketServer
 
       this.#wsServer.on('close', () =>
       {
-        console.log('[WebsocketServer] Stopping heartbeat')
+        console.log('[WebsocketServer] onClose Stopping heartbeat')
         clearInterval(this.#heartbeatInterval);
       });
 
