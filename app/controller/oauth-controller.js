@@ -436,6 +436,11 @@ Router.post('/remove-token', async (req, res) =>
 		const oAuthToken = await mOauthToken.delete({ createdBy:  decodedTokenResult.user._id, source: req.body.source });
 		const thirdPartyAccount = await mThirdPartyAccount.delete({ createdBy:  decodedTokenResult.user._id, source: req.body.source });
 
+
+		// close the socket for this user id
+		console.log('[oauth-controller.remove-token] almost completed closing socket');
+		NotificationManager.GetInstance().serverMgr().get('websocket').closeToken( req.body.source )
+
 		console.log('[oauth-controller.remove-token] completed');
 
 		res.status(200).send({

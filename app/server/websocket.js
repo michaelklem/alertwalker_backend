@@ -153,6 +153,23 @@ class WebsocketServer
     }
   }
 
+  closeToken(userId) {
+    const keys = Object.keys(this.#clients);
+    for(let i = 0; i < keys.length; i++)
+    {
+      console.log(`[WebSocketServer] closeToken: ${userId} for ${this.#clients[keys[i]]}`)
+      // If dead kill it
+      if(userId === this.#clients[keys[i]] ) {
+        console.log(`[WebSocketServer] closeTokening : ${userId}`)
+        this.#clients[keys[i]].connection.terminate();
+        delete this.#clients[keys[i]];
+        console.log(`[WebSocketServer] closeTokening 2 : ${userId}`)
+        break
+      }
+    }  
+  }
+  
+  
   /**
     Starts a continuous loop of pings to keep connections alive
   */
