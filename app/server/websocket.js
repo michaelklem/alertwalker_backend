@@ -158,7 +158,7 @@ class WebsocketServer
     if (socket) {
       socket.connection.terminate();
       delete this.#clients[userId];
-      console.log(`[WebSocketServer] closeTokening 2 : ${userId}`)
+      console.log(`[WebSocketServer] closing socket for user : ${userId}`)
     }
   }
   
