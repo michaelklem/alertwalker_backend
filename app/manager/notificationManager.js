@@ -25,6 +25,10 @@ class NotificationManager
     console.log('NotificationManager instantiated successfully: true');
   }
 
+  getServerMgr() {
+    return this.#serverMgr
+  }
+  
   /**
     Initialize NotificationManager properly
     @param  {Model.<Notification>}  mNotification So we can interact with notifications
