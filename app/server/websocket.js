@@ -157,7 +157,7 @@ class WebsocketServer
     const keys = Object.keys(this.#clients);
     for(let i = 0; i < keys.length; i++)
     {
-      console.log(`[WebSocketServer] closeToken: ${userId} for ${this.#clients[keys[i]]}`)
+      console.log(`[WebSocketServer] closeToken: ${userId} for ${JSON.stringify( this.#clients[keys[i]] )}`)
       // If dead kill it
       if(userId === this.#clients[keys[i]] ) {
         console.log(`[WebSocketServer] closeTokening : ${userId}`)
