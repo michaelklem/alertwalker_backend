@@ -44,6 +44,8 @@ class WebsocketServer
       // When client connects
       this.#wsServer.on('connection', (connection, req, client) =>
       {
+        console.log('[WebsocketServer] received connection message')
+
         const id = uuid();
         console.log('[WebsocketServer] Client connected');
 
@@ -73,8 +75,6 @@ class WebsocketServer
         console.log('[WebsocketServer] onClose Stopping heartbeat')
         clearInterval(this.#heartbeatInterval);
       });
-
-      console.log(`[WebsocketServer] WebsocketServer initialized from close message`);
     }
     catch(err)
     {
@@ -175,6 +175,8 @@ class WebsocketServer
   */
   startHeartbeat()
   {
+    console.log(`[WebSocket] starting heartbeat`)
+
     this.#heartbeatInterval = setInterval(() =>
     {
       const keys = Object.keys(this.#clients);

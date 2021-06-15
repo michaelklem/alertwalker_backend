@@ -241,6 +241,8 @@ class Pusher
   */
   static async UpsertPushToken(userId, service, deviceId, token)
   {
+    console.log('[Pusher.UpsertPushToken]')
+
     if(Pusher.#instance === null)
     {
       throw new Error('Pusher not instantiated');
@@ -300,6 +302,8 @@ class Pusher
   {
     try
     {
+      console.log('[Pusher.SendPush]')
+
       if(Pusher.#instance === null)
       {
         throw new Error('Pusher not instantiated');
@@ -433,6 +437,7 @@ class Pusher
   */
   static async SendWebPush({ pushToken, notification })
   {
+    console.log('[Pusher.SendWebPush]')
     if(Pusher.#instance === null)
     {
       throw new Error('Pusher not instantiated');
