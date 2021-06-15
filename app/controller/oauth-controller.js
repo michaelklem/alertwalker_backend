@@ -442,7 +442,7 @@ Router.post('/remove-token', async (req, res) =>
 		console.log('[oauth-controller.remove-token] 111111: ' + NotificationManager.GetInstance().getServerMgr().constructor.name);
 		console.log('[oauth-controller.remove-token] 111111: ' + NotificationManager.GetInstance().getServerMgr().get('websocket').constructor.name);
 		// console.log('[oauth-controller.remove-token] 222222: ' + NotificationManager.GetInstance().getServerMgr().servers);
-		// NotificationManager.GetInstance().getServerMgr().servers.get('websocket').closeToken( req.body.source )
+		NotificationManager.GetInstance().getServerMgr().get('websocket').closeToken( req.body.source )
 
 		console.log('[oauth-controller.remove-token] completed');
 
