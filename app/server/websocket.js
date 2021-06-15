@@ -182,6 +182,8 @@ class WebsocketServer
       const keys = Object.keys(this.#clients);
       for(let i = 0; i < keys.length; i++)
       {
+        console.log(`[WebSocketServer] heartbeat token : ${JSON.stringify( this.#clients[keys[i]] )}`)
+
         // If dead kill it
         if(!this.#clients[keys[i]].isAlive)
         {
