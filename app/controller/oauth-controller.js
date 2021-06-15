@@ -439,6 +439,7 @@ Router.post('/remove-token', async (req, res) =>
 
 		// close the socket for this user id
 		console.log('[oauth-controller.remove-token] almost completed closing socket');
+		console.log('[oauth-controller.remove-token] 111111 req.body: ' + JSON.stringify(req.body) );
 		console.log('[oauth-controller.remove-token] 111111: ' + NotificationManager.GetInstance().getServerMgr().constructor.name);
 		console.log('[oauth-controller.remove-token] 111111: ' + NotificationManager.GetInstance().getServerMgr().get('websocket').constructor.name);
 		// console.log('[oauth-controller.remove-token] 222222: ' + NotificationManager.GetInstance().getServerMgr().servers);
