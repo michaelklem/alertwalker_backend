@@ -155,19 +155,25 @@ class WebsocketServer
 
   closeToken(userId) {
     const keys = Object.keys(this.#clients);
-    for(let i = 0; i < keys.length; i++)
-    {
-      console.log(`[WebSocketServer] closeToken: ${userId} for ${JSON.stringify( this.#clients[keys[i]] )}`)
-      console.log(`[WebSocketServer] closeToken: ${JSON.stringify(this.#clients[userId] )} }`)
-      // If dead kill it
-      if(userId === this.#clients[keys[i]] ) {
-        console.log(`[WebSocketServer] closeTokening : ${userId}`)
-        this.#clients[keys[i]].connection.terminate();
-        delete this.#clients[keys[i]];
-        console.log(`[WebSocketServer] closeTokening 2 : ${userId}`)
-        break
-      }
-    }  
+    let socket = this.#clients[userId]
+    if (socket) {
+      socket.connection.terminate();
+      delete this.#clients[keys[ userId]];
+      console.log(`[WebSocketServer] closeTokening 2 : ${userId}`)
+    }
+    // for(let i = 0; i < keys.length; i++)
+    // {
+    //   console.log(`[WebSocketServer] closeToken: ${userId} for ${JSON.stringify( this.#clients[keys[i]] )}`)
+    //   console.log(`[WebSocketServer] closeToken2: ${JSON.stringify(this.#clients[userId] )} }`)
+    //   // If dead kill it
+    //   if(userId === this.#clients[keys[i]] ) {
+    //     console.log(`[WebSocketServer] closeTokening : ${userId}`)
+    //     this.#clients[keys[i]].connection.terminate();
+    //     delete this.#clients[keys[i]];
+    //     console.log(`[WebSocketServer] closeTokening 2 : ${userId}`)
+    //     break
+    //   }
+    // }  
   }
   
   
