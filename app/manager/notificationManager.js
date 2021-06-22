@@ -258,6 +258,8 @@ class NotificationManager
               };
             }
 
+            console.log('HandleSubscriptionsFor] createdByFilter: ' + createdByFilter);
+
             orClause.push(
             {
               $and:
@@ -271,8 +273,7 @@ class NotificationManager
             });
           }
         }
-        console.log('HandleSubscriptionsFor] orClause: ' + orClause);
-        console.log('HandleSubscriptionsFor] createdByFilter: ' + createdByFilter);
+        console.log('HandleSubscriptionsFor] orClause: ' + JSON.stringify(orClause));
         subscriptions = await NotificationManager.#instance.#mEventSubscription.find({ $or: orClause });
       }  // create
 

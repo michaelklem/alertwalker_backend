@@ -125,6 +125,9 @@ Router.post('/geofence', async (req, res) =>
             createdByUserId: decodedTokenResult.user._id
           });
         }
+        else {
+					console.log('[LocationController] NOT Triggering geofence notification for area: ' + geofenceArea._id.toString());
+        }
         return true;
       }));
 
