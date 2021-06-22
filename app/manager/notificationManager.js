@@ -343,7 +343,7 @@ class NotificationManager
                 }
               }
               catch(err){
-                console.log('[HandleSubscriptionsFor] system error: ' + error);
+                console.log('[HandleSubscriptionsFor] system error: ' + err);
               }
               break;
             default:
