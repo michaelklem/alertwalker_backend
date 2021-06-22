@@ -160,6 +160,9 @@ class WebsocketServer
       delete this.#clients[userId];
       console.log(`[WebSocketServer] closing socket for user : ${userId}`)
     }
+    else {
+      console.log(`[WebSocketServer] socket not found for user : ${userId}`)
+    }
   }
   
   

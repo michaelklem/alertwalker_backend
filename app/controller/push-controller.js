@@ -368,6 +368,8 @@ Router.post('/token', async (req, res) =>
 {
 	try
 	{
+		console.log('[Push controller] token 1')
+
 		// Validate headers
 		const headerValidation = await Ext.validateHeaders(req.headers);
 		if(headerValidation.error !== null)
@@ -380,12 +382,16 @@ Router.post('/token', async (req, res) =>
 			return res.status(200).send({ error: 'No token provided.' });
 		}
 
+		console.log('[Push controller] token 2')
+
 		// Decode token to user
 		const decodedTokenResult = await Ext.validateToken(req.headers['x-access-token']);
 		if(decodedTokenResult.error !== null)
 		{
 			return res.status(200).send({ error: decodedTokenResult.error });
 		}
+
+		console.log('[Push controller] token 4 user id: ' + decodedTokenResult.user._id)
 
 		const pushToken = await UtilityManager.GetInstance().get('pusher').UpsertPushToken(	decodedTokenResult.user._id,
 																																											 	req.headers['x-device-service-name'],
@@ -394,6 +400,7 @@ Router.post('/token', async (req, res) =>
 
 		// TODO: Check if the same push token exists for this user multiple times, if so delete all but 1
 		// Somehow this route is being called multiple times in the same second.
+		console.log('[Push controller] token 4 pushToken: ' + pushToken)
 
 		
 		return res.status(200).send({
@@ -405,6 +412,7 @@ Router.post('/token', async (req, res) =>
 	catch(err)
 	{
 		await Log.Error(__filename, err);
+		console.log('[Push controller] token err: ' + err)
 		res.status(200).send({ error: err });
 	}
 });

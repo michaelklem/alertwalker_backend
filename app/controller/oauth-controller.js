@@ -34,6 +34,8 @@ Router.post('/login', async (req, res) =>
 
 	try
 	{
+		console.log('[OAUTH controller] login')
+
 		// Validate headers
 		const headerValidation = await Ext.validateHeaders(req.headers, {bypassToken: true});
 		if(headerValidation.error !== null)
@@ -73,6 +75,8 @@ Router.post('/login', async (req, res) =>
 			return res.status(200).send({ error: "Missing url parameter" });
 		}
 
+		console.log('[OAUTH controller] login 2')
+
 		let email = req.body.email;
 
 		const modelMgr = ModelManager.GetInstance();
@@ -86,6 +90,8 @@ Router.post('/login', async (req, res) =>
 		let user = await mUser.findOne({ email: email.toLowerCase() });
     if(thirdPartyAccount || req.body.password || user)
     {
+			console.log('[OAUTH controller] login 3')
+
 			const result = await UserManager.GetInstance().login({
 				email: email,
 				source: req.body.source,
@@ -105,6 +111,8 @@ Router.post('/login', async (req, res) =>
 			{
 				return res.status(200).send({ error: result.error });
 			}
+
+			console.log('[OAUTH controller] login 4')
 
       // Success
   		await Log.Info(__filename, "User " + user._id + " successfully signed in.");
