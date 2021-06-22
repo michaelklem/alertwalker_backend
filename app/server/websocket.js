@@ -73,7 +73,7 @@ class WebsocketServer
       this.#wsServer.on('close', () =>
       {
         console.log('[WebsocketServer] onClose Stopping heartbeat')
-        clearInterval(this.#heartbeatInterval);
+        //clearInterval(this.#heartbeatInterval);
       });
     }
     catch(err)
