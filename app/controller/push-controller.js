@@ -374,11 +374,13 @@ Router.post('/token', async (req, res) =>
 		const headerValidation = await Ext.validateHeaders(req.headers);
 		if(headerValidation.error !== null)
 		{
+			console.log('[Push controller] token 1a')
 			return res.status(200).send({ error: headerValidation.error });
 		}
 
 		if(!req.body.token)
 		{
+			console.log('[Push controller] token 1b')
 			return res.status(200).send({ error: 'No token provided.' });
 		}
 
@@ -388,6 +390,7 @@ Router.post('/token', async (req, res) =>
 		const decodedTokenResult = await Ext.validateToken(req.headers['x-access-token']);
 		if(decodedTokenResult.error !== null)
 		{
+			console.log('[Push controller] token 1c')
 			return res.status(200).send({ error: decodedTokenResult.error });
 		}
 
