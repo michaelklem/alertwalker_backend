@@ -102,7 +102,7 @@ class Pusher
 
     const pusher = await Pusher.GetInstance();
     const result = await pusher.awsClient().createApp(params).promise();
-    console.log(result);
+    console.log('[Pusher] CreateApplication: ' + result);
     return result.ApplicationResponse.Id;
   }
 
@@ -137,7 +137,7 @@ class Pusher
 
     const pusher = await Pusher.GetInstance();
     const result = (sandboxMode ? await pusher.awsClient().updateApnsSandboxChannel(params).promise() : await pusher.awsClient().updateApnsChannel(params).promise());
-    console.log(result);
+    console.log('[Pusher] CreateApnsChannel result: ' + result);
     return result;
   }
 
@@ -160,7 +160,7 @@ class Pusher
     };
     const pusher = await Pusher.GetInstance();
     const result = await pusher.awsClient().updateGcmChannel(params).promise();
-    console.log(result);
+    console.log('[Pusher] CreateGcmChannel result: ' + result);
     return result;
   }
 
@@ -403,12 +403,12 @@ class Pusher
         'MessageRequest': messageRequest
       };
 
-      console.log(messageRequest);
+      console.log('[Pusher] SendPush messageRequest params: ' + JSON.stringify( params ));
 
       const pusher = await Pusher.GetInstance();
       const result = await pusher.awsClient().sendMessages(params).promise();
-      console.log(result.MessageResponse.RequestId);
-      console.log(JSON.stringify(result.MessageResponse.Result));
+      console.log('[Pusher] SendPush sendMessages: ' + result.MessageResponse.RequestId);
+      console.log('[Pusher] SendPush sendMessages: ' + JSON.stringify(result.MessageResponse.Result));
 
       const pushNotification = await mPushNotification.create(
       {
@@ -424,7 +424,7 @@ class Pusher
     }
     catch(err)
     {
-      console.log(err);
+      console.log('[Pusher] error: ' + err);
       return null;
     }
   }

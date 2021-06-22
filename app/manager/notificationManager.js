@@ -148,6 +148,9 @@ class NotificationManager
     try
     {
       let createdByUserId = createdBy === null ? triggeredByEntity.createdBy._id : createdBy._id;
+    console.log('[HandleSubscriptionsFor] createdByUserId: ' + createdByUserId)
+    console.log('[HandleSubscriptionsFor] modelType: ' + modelType)
+    console.log('[HandleSubscriptionsFor] action: ' + action)
 
       // Build a list of subscriptions then iterate on it and create notifications
       let subscriptions = [];
@@ -158,6 +161,8 @@ class NotificationManager
       {
         return true;
       }
+
+      console.log('[HandleSubscriptionsFor] subscribableEvents: ' + JSON.stringify(subscribableEvents))
 
       // Find subscriptions using logic for specific action
       if(action === 'like')
@@ -266,12 +271,14 @@ class NotificationManager
             });
           }
         }
-        //console.log(JSON.stringify(orClause));
+        console.log('HandleSubscriptionsFor] orClause: ' + orClause);
+        console.log('HandleSubscriptionsFor] createdByFilter: ' + createdByFilter);
         subscriptions = await NotificationManager.#instance.#mEventSubscription.find({ $or: orClause });
-      }
+      }  // create
 
       //console.log('subscriptions');
       //console.log(subscriptions);
+      console.log('HandleSubscriptionsFor] subscriptions: ' + JSON.stringify(subscriptions));
 
       // Iterate subscriptions and create notifications
       for(let i = 0; i < subscriptions.length; i++)
@@ -302,6 +309,10 @@ class NotificationManager
               break;
             case 'push':
               // Notify user via push notification
+              console.log('[HandleSubscriptionsFor] push subscriptions[i]: ' + JSON.stringify( subscriptions[i] ));
+              console.log('[HandleSubscriptionsFor] push notification: ' +  notification );
+              console.log('[HandleSubscriptionsFor] push triggeredByEntity: ' + triggeredByEntity );
+              
               const utilityMgr = NotificationManager.#instance.#utilityMgr;
               await utilityMgr.get('pusher').SendPushForSubscription({
                 eventSubscription: subscriptions[i],
@@ -313,15 +324,25 @@ class NotificationManager
               // Send text message
               break;
             case 'system':
-              // Notify user via websocket if available
-              const serverMgr = NotificationManager.#instance.#serverMgr;
-              if(notification)
-              {
-                serverMgr.get('websocket').sendNotification(subscriptions[i].createdBy._id, notification);
+              try {
+                // Notify user via websocket if available
+                const serverMgr = NotificationManager.#instance.#serverMgr;
+                
+                console.log('[HandleSubscriptionsFor] system subscriptions[i]: ' + JSON.stringify( subscriptions[i] ));
+                console.log('[HandleSubscriptionsFor] system notification: ' +  notification );
+                console.log('[HandleSubscriptionsFor] system triggeredByEntity: ' + triggeredByEntity );
+
+                if(notification)
+                {
+                  serverMgr.get('websocket').sendNotification(subscriptions[i].createdBy._id, notification);
+                }
+                else
+                {
+                  serverMgr.get('websocket').sendGeofenceArea(subscriptions[i].createdBy._id, triggeredByEntity);
+                }
               }
-              else
-              {
-                serverMgr.get('websocket').sendGeofenceArea(subscriptions[i].createdBy._id, triggeredByEntity);
+              catch(err){
+                console.log('[HandleSubscriptionsFor] system error: ' + error);
               }
               break;
             default:
@@ -332,7 +353,7 @@ class NotificationManager
     }
     catch(err)
     {
-      console.log(err.message + '\nStack: ' + err.stack);
+      console.log('[HandleSubscriptionsFor] ' + err.message + '\nStack: ' + err.stack);
     }
   }
 
