@@ -29,6 +29,7 @@ Router.use(BodyParser.json());
  */
 Router.post('/geofence', async (req, res) =>
 {
+  console.log('[LocationController] geofence' )
   let decodedTokenResult = null;
 	try
 	{
@@ -46,6 +47,8 @@ Router.post('/geofence', async (req, res) =>
 			return res.status(200).send({ error: decodedTokenResult.error });
 		}
 
+    console.log('[LocationController] geofence authenticated' )
+
     // Find geofenced areas nearby
     const utilityMgr = UtilityManager.GetInstance();
 		const modelMgr = ModelManager.GetInstance();
@@ -54,7 +57,8 @@ Router.post('/geofence', async (req, res) =>
 
     await Promise.all(req.body.map( async(location, i) =>
     {
-      console.log(location);
+      console.log('[LocationController] geofence location: ' + JSON.stringify(location) )
+
       if(!location.latitude ||
          !location.longitude ||
          !location.accuracy)
@@ -62,6 +66,7 @@ Router.post('/geofence', async (req, res) =>
   			res.status(200).send({ error: 'Missing params' });
   		}
 
+      // get alerts created within the last two hours and within 500 meters of the users location
 			var d = new Date();
       d.setHours(d.getHours() - 2);
 
@@ -88,6 +93,8 @@ Router.post('/geofence', async (req, res) =>
 				}
       });
 
+      console.log('[LocationController] geofence geofenceAreas: ' + JSON.stringify(geofenceAreas) )
+
       // Send push notification for all geofence areas
       await Promise.all(geofenceAreas.map( async(geofenceArea, j) =>
       {
@@ -99,7 +106,7 @@ Router.post('/geofence', async (req, res) =>
 
         if(!prevNotification)
         {
-					console.log('Triggering geofence notification for area: ' + geofenceArea._id.toString());
+					console.log('[LocationController] Triggering geofence notification for area: ' + geofenceArea._id.toString());
           const createParams =
           {
             entityId: geofenceArea._id,
