@@ -183,7 +183,7 @@ class WebsocketServer
         // If dead kill it
         if(!this.#clients[keys[i]].isAlive)
         {
-          console.log(`[WebSocket] heartbeat killing connection for user: ${JSON.stringify( this.#clients[keys[i]] )}`)
+          console.log(`[WebSocket] heartbeat killing connection for user: ${ keys[i] }`)
           this.#clients[keys[i]].connection.terminate();
           delete this.#clients[keys[i]];
         }
