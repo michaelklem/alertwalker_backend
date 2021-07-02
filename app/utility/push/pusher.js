@@ -491,6 +491,8 @@ class Pusher
                                           entity,
                                           createdByUserId = null })
   {
+    console.log('[Pusher.SendPushForSubscription]')
+
     if(Pusher.#instance === null)
     {
       throw new Error('Pusher not instantiated');
@@ -501,7 +503,8 @@ class Pusher
     {
       if(pushTokens[i].service === 'ios' || pushTokens[i].service === 'android')
       {
-        console.log(pushTokens[i]._id.toString());
+        console.log('[Pusher.SendPushForSubscription] tokens: ' + pushTokens[i]._id.toString());
+
         await Pusher.SendPush({
          notification: notification,
          onOpenAction: 'DEEP_LINK',
@@ -534,6 +537,8 @@ class Pusher
                                         entity,
                                         createdByUserId })
   {
+    console.log('[Pusher.SendPushNoSubscription]')
+
     if(Pusher.#instance === null)
     {
       throw new Error('Pusher not instantiated');
@@ -544,6 +549,8 @@ class Pusher
     {
       if(pushTokens[i].service === 'ios' || pushTokens[i].service === 'android')
       {
+        console.log('[Pusher.SendPushNoSubscription] tokens: ' + pushTokens[i]._id.toString());
+
         await Pusher.SendPush({
          notification: notification,
          onOpenAction: 'DEEP_LINK',
