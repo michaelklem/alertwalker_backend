@@ -57,7 +57,6 @@ Router.post('/geofence', async (req, res) =>
 
     await Promise.all(req.body.map( async(location, i) =>
     {
-      console.log('[LocationController] geofence location: ' + JSON.stringify(location) )
 
       if(!location.latitude ||
          !location.longitude ||
@@ -65,6 +64,7 @@ Router.post('/geofence', async (req, res) =>
   		{
   			res.status(200).send({ error: 'Missing params' });
   		}
+
 
       // get alerts created within the last two hours and within 500 meters of the users location
 			var d = new Date();
@@ -93,12 +93,15 @@ Router.post('/geofence', async (req, res) =>
 				}
       });
 
-      console.log('[LocationController] geofence geofenceAreas: ' + JSON.stringify(geofenceAreas) )
+      console.log('[LocationController.geofence] location for user: ' + decodedTokenResult.user._id + ' = ' + JSON.stringify(location) )
+
+      console.log('[LocationController.geofence] geofenceAreas around user: ' + decodedTokenResult.user._id + ' = ' + JSON.stringify(geofenceAreas) )
 
       // Send push notification for all geofence areas
       await Promise.all(geofenceAreas.map( async(geofenceArea, j) =>
       {
         // Make sure a notification for this geofence area doesn't exist yet
+        // Has this user been sent a notification already?
         const prevNotification = await mNotification.findOne({
           createdBy: decodedTokenResult.user._id,
           entityId: geofenceArea._id
@@ -106,7 +109,7 @@ Router.post('/geofence', async (req, res) =>
 
         if(!prevNotification)
         {
-					console.log('[LocationController] Triggering geofence notification for area: ' + geofenceArea._id.toString());
+					console.log('[LocationController.geofence] Triggering geofence notification for area: ' + geofenceArea._id.toString());
           const createParams =
           {
             entityId: geofenceArea._id,
@@ -126,7 +129,7 @@ Router.post('/geofence', async (req, res) =>
           });
         }
         else {
-					console.log('[LocationController] NOT Triggering geofence notification for area: ' + geofenceArea._id.toString());
+					console.log('[LocationController] NOT Triggering geofence notification for area: ' + geofenceArea._id.toString() + ' Previous notification: ' + JSON.stringify(prevNotification));
         }
         return true;
       }));
