@@ -143,11 +143,13 @@ class NotificationManager
     @param  {Mongo.Document?} createdBy   This can be used to tell who created the notification, otherwise we use the triggeredByEntity.createdBy
     @returns {Bool} true
   */
-  static async HandleSubscriptionsFor(modelType, action, triggeredByEntity, createdBy = null)
+  static async c(modelType, action, triggeredByEntity, createdBy = null)
   {
     try
     {
       let createdByUserId = createdBy === null ? triggeredByEntity.createdBy._id : createdBy._id;
+    console.log('[HandleSubscriptionsFor] triggeredByEntity: ' + triggeredByEntity)
+    console.log('[HandleSubscriptionsFor] createdBy: ' + createdBy)
     console.log('[HandleSubscriptionsFor] createdByUserId: ' + createdByUserId)
     console.log('[HandleSubscriptionsFor] modelType: ' + modelType)
     console.log('[HandleSubscriptionsFor] action: ' + action)
@@ -162,7 +164,7 @@ class NotificationManager
         return true;
       }
 
-      console.log('[HandleSubscriptionsFor] subscribableEvents: ' + JSON.stringify(subscribableEvents))
+      console.log('[HandleSubscriptionsFor] subscribableEvents.length: ' + subscribableEvents.length)
 
       // Find subscriptions using logic for specific action
       if(action === 'like')
@@ -209,6 +211,8 @@ class NotificationManager
         for(let i = 0; i < subscribableEvents.length; i++)
         {
           // Handle subscriptions to this specific user
+          console.log('[HandleSubscriptionsFor] subscribableEvent: ' + JSON.stringify(subscribableEvents[i]))
+    
           orClause.push(
           {
             $and:
@@ -258,7 +262,7 @@ class NotificationManager
               };
             }
 
-            console.log('HandleSubscriptionsFor] createdByFilter: ' + createdByFilter);
+            console.log('HandleSubscriptionsFor] createdByFilter: ' + JSON.stringify(createdByFilter) );
 
             orClause.push(
             {
@@ -279,7 +283,7 @@ class NotificationManager
 
       //console.log('subscriptions');
       //console.log(subscriptions);
-      console.log('HandleSubscriptionsFor] subscriptions: ' + JSON.stringify(subscriptions));
+      console.log('HandleSubscriptionsFor] found subscriptions: ' + JSON.stringify(subscriptions));
 
       // Iterate subscriptions and create notifications
       for(let i = 0; i < subscriptions.length; i++)

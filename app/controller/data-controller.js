@@ -30,6 +30,7 @@ Router.use(BodyParser.json({ limit: '50mb' }));
 */
 Router.post('/create', async (req, res) =>
 {
+	console.log('[data controller] create');
 	try
 	{
 		const form = new Multiparty.Form();
@@ -73,14 +74,14 @@ Router.post('/create', async (req, res) =>
 				const canCreate = await mModel.canPerformAction('create', decodedTokenResult.user);
 				if(!canCreate)
 				{
-					console.log(decodedTokenResult.user._id.toString() + ' tried to create ' + fields.model[0]);
+					console.log('[data controller] create token: ' + decodedTokenResult.user._id.toString() + ' tried to create ' + fields.model[0]);
 					return res.status(200).send({ error: 'You are not authorized to create this model type' });
 				}
 
 				// Build create params
 				const coreModelDoc = await mModel.getCoreDocument();
 				const createParams = await modelMgr.convertFormFieldsToJsonParams(coreModelDoc.schemaFields, fields, files, decodedTokenResult.user._id);
-				console.log(createParams);
+				console.log('[data controller] create createParams: ' + createParams);
 				const createdRecord = await mModel.create(createParams, decodedTokenResult.user);
 
 				// Check if any _attach_ flags set
@@ -104,7 +105,7 @@ Router.post('/create', async (req, res) =>
 						attachableRecord[fieldName].push(createdRecord._id);
 						await attachableRecord.save();
 
-						console.log('New ' + fields.model[0] + ' attached to ' +  fields[keys[i]][0] + ' in model ' + modelName);
+						console.log('[data controller] create New ' + fields.model[0] + ' attached to ' +  fields[keys[i]][0] + ' in model ' + modelName);
 					}
 				}
 
