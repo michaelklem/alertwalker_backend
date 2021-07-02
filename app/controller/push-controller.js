@@ -294,6 +294,7 @@ Router.use(BodyParser.json());
    */
  Router.post('/', async (req, res) =>
  {
+	console.log('[Push controller] trigger');
  	try
  	{
 		// Validate headers
@@ -323,6 +324,7 @@ Router.use(BodyParser.json());
 
 		const user = await mUser.findOne({ _id: req.body.recipientId });
 		const geofenceArea = await mGeofenceArea.findOne({ _id: '607b9c412acc380004b395df' });
+		console.log('[Push controller] trigger geofenceArea ' + JSON.stringify(geofenceArea));
 
 		const createParams =
 		{
