@@ -143,7 +143,7 @@ class NotificationManager
     @param  {Mongo.Document?} createdBy   This can be used to tell who created the notification, otherwise we use the triggeredByEntity.createdBy
     @returns {Bool} true
   */
-  static async c(modelType, action, triggeredByEntity, createdBy = null)
+  static async HandleSubscriptionsFor(modelType, action, triggeredByEntity, createdBy = null)
   {
     try
     {
