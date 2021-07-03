@@ -148,11 +148,11 @@ class NotificationManager
     try
     {
       let createdByUserId = createdBy === null ? triggeredByEntity.createdBy._id : createdBy._id;
-    console.log('[HandleSubscriptionsFor] triggeredByEntity: ' + triggeredByEntity)
-    console.log('[HandleSubscriptionsFor] createdBy: ' + createdBy)
-    console.log('[HandleSubscriptionsFor] createdByUserId: ' + createdByUserId)
-    console.log('[HandleSubscriptionsFor] modelType: ' + modelType)
-    console.log('[HandleSubscriptionsFor] action: ' + action)
+    console.log('[NotificationManager.HandleSubscriptionsFor] triggeredByEntity: ' + triggeredByEntity)
+    console.log('[NotificationManager.HandleSubscriptionsFor] createdBy: ' + createdBy)
+    console.log('[NotificationManager.HandleSubscriptionsFor] createdByUserId: ' + createdByUserId)
+    console.log('[NotificationManager.HandleSubscriptionsFor] modelType: ' + modelType)
+    console.log('[NotificationManager.HandleSubscriptionsFor] action: ' + action)
 
       // Build a list of subscriptions then iterate on it and create notifications
       let subscriptions = [];
@@ -164,7 +164,7 @@ class NotificationManager
         return true;
       }
 
-      console.log('[HandleSubscriptionsFor] subscribableEvents.length: ' + subscribableEvents.length)
+      console.log('[NotificationManager.HandleSubscriptionsFor] subscribableEvents.length: ' + subscribableEvents.length)
 
       // Find subscriptions using logic for specific action
       if(action === 'like')
@@ -211,7 +211,7 @@ class NotificationManager
         for(let i = 0; i < subscribableEvents.length; i++)
         {
           // Handle subscriptions to this specific user
-          console.log('[HandleSubscriptionsFor] subscribableEvent: ' + JSON.stringify(subscribableEvents[i]))
+          console.log('[NotificationManager.HandleSubscriptionsFor] subscribableEvent: ' + JSON.stringify(subscribableEvents[i]))
     
           orClause.push(
           {
@@ -262,7 +262,7 @@ class NotificationManager
               };
             }
 
-            console.log('HandleSubscriptionsFor] createdByFilter: ' + JSON.stringify(createdByFilter) );
+            console.log('[NotificationManager.HandleSubscriptionsFor] createdByFilter: ' + JSON.stringify(createdByFilter) );
 
             orClause.push(
             {
@@ -277,13 +277,13 @@ class NotificationManager
             });
           }
         }
-        console.log('HandleSubscriptionsFor] orClause: ' + JSON.stringify(orClause));
+        console.log('[NotificationManager.HandleSubscriptionsFor] orClause: ' + JSON.stringify(orClause));
         subscriptions = await NotificationManager.#instance.#mEventSubscription.find({ $or: orClause });
       }  // create
 
       //console.log('subscriptions');
       //console.log(subscriptions);
-      console.log('HandleSubscriptionsFor] found subscriptions: ' + JSON.stringify(subscriptions));
+      console.log('[NotificationManager.HandleSubscriptionsFor] found subscriptions: ' + JSON.stringify(subscriptions));
 
       // Iterate subscriptions and create notifications
       for(let i = 0; i < subscriptions.length; i++)
@@ -303,10 +303,12 @@ class NotificationManager
           };
           notification = await NotificationManager.#instance.#mNotification.create(createParams, createdBy === null ? triggeredByEntity.createdBy : createdBy);
         }
+
         // Notify user how they have chosen to have the notification delivered
         for(let j = 0; j < subscriptions[i].deliveryMethod.length; j++)
         {
-          console.log('Processing notification with delivery method: ' + subscriptions[i].deliveryMethod[j]);
+          console.log('[NotificationManager.HandleSubscriptionsFor] Processing notification with subscription: ' + JSON.stringify(subscriptions));
+          
           switch(subscriptions[i].deliveryMethod[j])
           {
             case 'email':
@@ -314,9 +316,9 @@ class NotificationManager
               break;
             case 'push':
               // Notify user via push notification
-              console.log('[HandleSubscriptionsFor] push subscriptions[i]: ' + JSON.stringify( subscriptions[i] ));
-              console.log('[HandleSubscriptionsFor] push notification: ' +  notification );
-              console.log('[HandleSubscriptionsFor] push triggeredByEntity: ' + triggeredByEntity );
+              console.log('[NotificationManager.HandleSubscriptionsFor] push subscriptions[i]: ' + JSON.stringify( subscriptions[i] ));
+              console.log('[NotificationManager.HandleSubscriptionsFor] push notification: ' +  JSON.stringify(notification) );
+              console.log('[NotificationManager.HandleSubscriptionsFor] push triggeredByEntity: ' + JSON.stringify(triggeredByEntity) );
               
               const utilityMgr = NotificationManager.#instance.#utilityMgr;
               await utilityMgr.get('pusher').SendPushForSubscription({
@@ -333,21 +335,23 @@ class NotificationManager
                 // Notify user via websocket if available
                 const serverMgr = NotificationManager.#instance.#serverMgr;
                 
-                console.log('[HandleSubscriptionsFor] system subscriptions[i]: ' + JSON.stringify( subscriptions[i] ));
-                console.log('[HandleSubscriptionsFor] system notification: ' +  notification );
-                console.log('[HandleSubscriptionsFor] system triggeredByEntity: ' + triggeredByEntity );
+                console.log('[NotificationManager.HandleSubscriptionsFor] system subscriptions[i]: ' + JSON.stringify( subscriptions[i] ));
+                console.log('[NotificationManager.HandleSubscriptionsFor] system notification: ' +  notification );
+                console.log('[NotificationManager.HandleSubscriptionsFor] system triggeredByEntity: ' + triggeredByEntity );
 
                 if(notification)
                 {
+                  console.log('[NotificationManager.HandleSubscriptionsFor] sending notification via socket')
                   serverMgr.get('websocket').sendNotification(subscriptions[i].createdBy._id, notification);
                 }
                 else
                 {
+                  console.log('[NotificationManager.HandleSubscriptionsFor] sending geofencearea via socket')
                   serverMgr.get('websocket').sendGeofenceArea(subscriptions[i].createdBy._id, triggeredByEntity);
                 }
               }
               catch(err){
-                console.log('[HandleSubscriptionsFor] system error: ' + err);
+                console.log('[NotificationManager.HandleSubscriptionsFor] system error: ' + err);
               }
               break;
             default:
@@ -358,7 +362,7 @@ class NotificationManager
     }
     catch(err)
     {
-      console.log('[HandleSubscriptionsFor] ' + err.message + '\nStack: ' + err.stack);
+      console.log('[NotificationManager.HandleSubscriptionsFor] ' + err.message + '\nStack: ' + err.stack);
     }
   }
 

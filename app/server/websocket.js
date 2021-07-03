@@ -86,12 +86,12 @@ class WebsocketServer
   {
     if(this.#clients[userId])
     {
-      console.log('[WebsocketServer] WebsocketServer sending notification to: ' + userId);
+      console.log('[WebsocketServer.sendNotification] WebsocketServer sending notification to: ' + userId);
       this.#clients[userId].connection.send(JSON.stringify({type: 'notification', notification: notification}));
     }
     else
     {
-      console.log('[WebsocketServer] WebsocketServer no active connection for: ' + userId);
+      console.log('[WebsocketServer.sendNotification] WebsocketServer no active connection for: ' + userId);
     }
   }
 
@@ -99,12 +99,12 @@ class WebsocketServer
   {
     if(this.#clients[userId])
     {
-      console.log('[WebsocketServer] WebsocketServer sending geofencAarea to: ' + userId);
+      console.log('[WebsocketServer.sendGeofenceArea] WebsocketServer sending geofencAarea to: ' + userId);
       this.#clients[userId].connection.send(JSON.stringify({ type: 'geofenceArea', geofenceArea: geofenceArea }));
     }
     else
     {
-      console.log('[WebsocketServer] WebsocketServer no active connection for: ' + userId);
+      console.log('[WebsocketServer.sendGeofenceArea] WebsocketServer no active connection for: ' + userId);
     }
   }
 
