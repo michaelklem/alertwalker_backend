@@ -96,6 +96,8 @@ class NotificationManager
 
   static async SubscribeUserToEvents({ openTo, user })
   {
+    console.log('[NotificationManager.SubscribeUserToEvents] for user: ' + user + ' opento: ' + JSON.stringify(openTo))
+
     const subscribableEvents = await NotificationManager.#instance.#mSubscribableEvent.find(
 		{
 			openTo: openTo,
@@ -110,6 +112,8 @@ class NotificationManager
 			]
 		});
 
+    console.log('[NotificationManager.SubscribeUserToEvents] found events: ' + subscribableEvents.length)
+
 		for(let i = 0; i < subscribableEvents.length; i++)
 		{
 			for(let j = 0; j < subscribableEvents[i].triggers.values.length; j++)
@@ -118,6 +122,9 @@ class NotificationManager
 				if(subscribableEvents[i].triggers.values[j].deliveryMethod === 'push' ||
 					subscribableEvents[i].triggers.values[j].deliveryMethod === 'system')
 				{
+
+          console.log('[NotificationManager.SubscribeUserToEvents] creating event subscription for user: ' + JSON.stringify(user) + '  subscribable event: ' + subscribableEvents[i]._id)
+          
 					await NotificationManager.#instance.#mEventSubscription.create(
 					{
 						event: subscribableEvents[i]._id,
@@ -148,11 +155,11 @@ class NotificationManager
     try
     {
       let createdByUserId = createdBy === null ? triggeredByEntity.createdBy._id : createdBy._id;
-    console.log('[NotificationManager.HandleSubscriptionsFor] triggeredByEntity: ' + triggeredByEntity)
-    console.log('[NotificationManager.HandleSubscriptionsFor] createdBy: ' + createdBy)
-    console.log('[NotificationManager.HandleSubscriptionsFor] createdByUserId: ' + createdByUserId)
-    console.log('[NotificationManager.HandleSubscriptionsFor] modelType: ' + modelType)
-    console.log('[NotificationManager.HandleSubscriptionsFor] action: ' + action)
+      console.log('[NotificationManager.HandleSubscriptionsFor] triggeredByEntity: ' + triggeredByEntity)
+      console.log('[NotificationManager.HandleSubscriptionsFor] createdBy: ' + createdBy)
+      console.log('[NotificationManager.HandleSubscriptionsFor] createdByUserId: ' + createdByUserId)
+      console.log('[NotificationManager.HandleSubscriptionsFor] modelType: ' + modelType)
+      console.log('[NotificationManager.HandleSubscriptionsFor] action: ' + action)
 
       // Build a list of subscriptions then iterate on it and create notifications
       let subscriptions = [];

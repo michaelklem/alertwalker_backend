@@ -296,6 +296,8 @@ Router.post('/read', async (req, res) =>
 */
 Router.post('/update-subscriptions', async (req, res) =>
 {
+	console.log('[NotificationController.update-subscriptions]')
+
 	const configs = []
 	try
 	{
@@ -403,6 +405,9 @@ Router.post('/update-subscriptions', async (req, res) =>
 
 async function applySubscriptionsForUsers(users, subscribableEvents, mEventSubscription)
 {
+	console.log('[NotificationController.applySubscriptionsForUsers] for users: ' + JSON.stringify(users))
+	console.log('[NotificationController.applySubscriptionsForUsers] for mEventSubscription: ' + JSON.stringify(mEventSubscription))
+
 	let subscription = null;
 	// Iterate users
 	for(let i = 0; i < users.length; i++)
@@ -421,6 +426,8 @@ async function applySubscriptionsForUsers(users, subscribableEvents, mEventSubsc
 						// If not create it
 						if(!subscription)
 						{
+							console.log('[NotificationController.applySubscriptionsForUsers] creating event subscription for subscribable event: ' + subscribableEvents[j]._id)
+							
 							await mEventSubscription.create(
 							{
 								event: subscribableEvents[j]._id,

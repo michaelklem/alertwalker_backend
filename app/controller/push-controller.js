@@ -67,7 +67,9 @@ Router.use(BodyParser.json());
 			deliveryMethod: 'push'
 		});
 
-    // Find push token
+		console.log('[PushController.init] subscriptions found for user: ' + decodedTokenResult.user._id + ' = ' + subscriptions.length)
+    
+		// Find push token
     let params =
     {
       createdBy: decodedTokenResult.user._id,
@@ -87,6 +89,9 @@ Router.use(BodyParser.json());
 
 		// Iterate events that can be subscribed to
 		const subscibableEvents = await mSubscribableEvent.find(params);
+
+		console.log('[PushController.init] subscribable events found for user: ' + decodedTokenResult.user._id + ' = ' + subscibableEvents.length)
+
 		for(let i = 0; i < subscibableEvents.length; i++)
 		{
 			// Check if already subscribed
@@ -259,7 +264,8 @@ Router.use(BodyParser.json());
 					// Insert
 					else
 					{
-						console.log('Creating');
+						console.log('[PushController.subscribe] creating event subscription for user: ' + JSON.stringify(decodedTokenResult.user) + ' query: ' + JSON.stringify(updateQuery))
+						
 						await mEventSubscription.create(updateQuery, decodedTokenResult.user);
 					}
 				}
@@ -323,7 +329,7 @@ Router.use(BodyParser.json());
 		const mGeofenceArea = modelMgr.getModel('geofencearea');
 
 		const user = await mUser.findOne({ _id: req.body.recipientId });
-		const geofenceArea = await mGeofenceArea.findOne({ _id: '607b9c412acc380004b395df' });
+		const geofenceArea = await mGeofenceArea.findOne({ _id: '60e0a6dea2fe3d0004f6c87f' });
 		console.log('[Push controller] trigger geofenceArea ' + JSON.stringify(geofenceArea));
 
 		const createParams =
