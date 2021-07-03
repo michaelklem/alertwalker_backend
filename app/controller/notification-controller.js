@@ -30,6 +30,8 @@ Router.use(BodyParser.json());
  	const configs = []
  	try
  	{
+	 	console.log('[Notifications.init]')
+
 		// Validate headers
 		const headerValidation = await Ext.validateHeaders(req.headers);
 		if(headerValidation.error !== null)
@@ -54,6 +56,7 @@ Router.use(BodyParser.json());
 
 		// Find notifications
 		const notifications = await mNotification.find({ recipient: decodedTokenResult.user._id }, { createdOn: -1 });
+	 	console.log(`[Notifications.init] notifications found for user ${decodedTokenResult.user._id} ${notifications.length}`)
 
  		res.status(200).send({
 			results: notifications,
