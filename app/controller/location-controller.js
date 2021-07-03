@@ -123,6 +123,7 @@ Router.post('/geofence', async (req, res) =>
             status: 'unread',
           };
           const notification = await mNotification.create(createParams, decodedTokenResult.user._id);
+          console.log('[LocationController.geofence] calling SendPushNoSubscription')
           return await utilityMgr.get('pusher').SendPushNoSubscription(
           {
             notification: notification,

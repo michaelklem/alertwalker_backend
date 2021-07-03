@@ -337,6 +337,7 @@ Router.use(BodyParser.json());
 			status: 'unread',
 		};
 		const notification = await mNotification.create(createParams, user._id);
+		console.log('[PushController./] calling SendPushNoSubscription')
 		await utilityMgr.get('pusher').SendPushNoSubscription(
 		{
 			notification: notification,
