@@ -265,7 +265,7 @@ Router.use(BodyParser.json());
 					else
 					{
 						console.log('[PushController.subscribe] creating event subscription for user: ' + JSON.stringify(decodedTokenResult.user) + ' query: ' + JSON.stringify(updateQuery))
-						
+
 						await mEventSubscription.create(updateQuery, decodedTokenResult.user);
 					}
 				}
@@ -403,7 +403,7 @@ Router.post('/token', async (req, res) =>
 			return res.status(200).send({ error: decodedTokenResult.error });
 		}
 
-		console.log('[Push controller] token 4 user id: ' + decodedTokenResult.user._id)
+		console.log('[Push controller] token 4 user id: ' + decodedTokenResult.user._id + ' received push token: ' + req.body.token)
 
 		const pushToken = await UtilityManager.GetInstance().get('pusher').UpsertPushToken(	decodedTokenResult.user._id,
 																																											 	req.headers['x-device-service-name'],
