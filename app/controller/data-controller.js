@@ -62,6 +62,8 @@ Router.post('/create', async (req, res) =>
 					return res.status(200).send({ error: decodedTokenResult.error });
 				}
 
+				console.log('[data controller] create form fields: ' + JSON.stringify(fields))
+				 
 				// Locate model
 				const modelMgr = ModelManager.GetInstance();
 				const mModel = modelMgr.getModel(fields.model[0]);
@@ -81,7 +83,7 @@ Router.post('/create', async (req, res) =>
 				// Build create params
 				const coreModelDoc = await mModel.getCoreDocument();
 				const createParams = await modelMgr.convertFormFieldsToJsonParams(coreModelDoc.schemaFields, fields, files, decodedTokenResult.user._id);
-				console.log('[data controller] create createParams: ' + createParams);
+				console.log('[data controller] create createParams: ' + JSON.stringify(createParams));
 				const createdRecord = await mModel.create(createParams, decodedTokenResult.user);
 
 				// Check if any _attach_ flags set
@@ -109,6 +111,10 @@ Router.post('/create', async (req, res) =>
 					}
 				}
 
+				// Need to send out push notifications too via sockets so the alert
+				// displays on user's maps when it is created
+
+				
 				// Handle notifications
 				await NotificationManager.HandleSubscriptionsFor(	fields.model[0],
 																													'create',
@@ -124,7 +130,7 @@ Router.post('/create', async (req, res) =>
 			}
 			catch(err)
 			{
-				console.log(err);
+				console.log('[data controller] error: ' + err);
 				res.status(200).send({ error: err.message });
 			}
 		});

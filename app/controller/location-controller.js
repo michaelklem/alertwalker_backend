@@ -70,7 +70,7 @@ Router.post('/geofence', async (req, res) =>
 			var d = new Date();
       d.setHours(d.getHours() - 2);
 
-      const geofenceAreas = await mGeofenceArea.find({
+      let query = {
         location:
         {
           $near:
@@ -92,8 +92,11 @@ Router.post('/geofence', async (req, res) =>
 				{
 					$ne: decodedTokenResult.user._id
 				}
-      });
+      }
 
+      const geofenceAreas = await mGeofenceArea.find(query);
+
+      console.log(`[LocationController.geofence] query: ${query}`)
       console.log(`[LocationController.geofence] geofenceAreas around user: ${decodedTokenResult.user._id} who is at location:  LAT:${location.latitude}, LNG:${location.longitude} = ${JSON.stringify(geofenceAreas)}` )
 
       // Send push notification for all geofence areas
