@@ -96,7 +96,7 @@ Router.post('/geofence', async (req, res) =>
 
       const geofenceAreas = await mGeofenceArea.find(query);
 
-      console.log(`[LocationController.geofence] query: ${query}`)
+      console.log(`[LocationController.geofence] query: ${JSON.stringify(query)}`)
       console.log(`[LocationController.geofence] geofenceAreas around user: ${decodedTokenResult.user._id} who is at location:  LAT:${location.latitude}, LNG:${location.longitude} = ${JSON.stringify(geofenceAreas)}` )
 
       // Send push notification for all geofence areas
