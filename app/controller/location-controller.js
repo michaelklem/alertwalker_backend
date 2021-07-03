@@ -47,7 +47,7 @@ Router.post('/geofence', async (req, res) =>
 			return res.status(200).send({ error: decodedTokenResult.error });
 		}
 
-    console.log('[LocationController] geofence authenticated' )
+    // console.log('[LocationController] geofence authenticated' )
 
     // Find geofenced areas nearby
     const utilityMgr = UtilityManager.GetInstance();
@@ -87,15 +87,14 @@ Router.post('/geofence', async (req, res) =>
 				{
 					$gte: d
 				},
+        // Ignore alerts created by the user
 				createdBy:
 				{
 					$ne: decodedTokenResult.user._id
 				}
       });
 
-      console.log('[LocationController.geofence] location for user: ' + decodedTokenResult.user._id + ' = ' + JSON.stringify(location) )
-
-      console.log('[LocationController.geofence] geofenceAreas around user: ' + decodedTokenResult.user._id + ' = ' + JSON.stringify(geofenceAreas) )
+      console.log(`[LocationController.geofence] geofenceAreas around user: ${decodedTokenResult.user._id} who is at location:  LAT:${location.latitude}, LNG:${location.longitude} = ${JSON.stringify(geofenceAreas)}` )
 
       // Send push notification for all geofence areas
       await Promise.all(geofenceAreas.map( async(geofenceArea, j) =>
@@ -109,7 +108,7 @@ Router.post('/geofence', async (req, res) =>
 
         if(!prevNotification)
         {
-					console.log('[LocationController.geofence] Triggering geofence notification for area: ' + geofenceArea._id.toString());
+					console.log(`[LocationController.geofence] Triggering geofence notification for area: ${geofenceArea._id} for user ${decodedTokenResult.user._id}`);
           const createParams =
           {
             entityId: geofenceArea._id,
@@ -129,14 +128,14 @@ Router.post('/geofence', async (req, res) =>
           });
         }
         else {
-					console.log('[LocationController] NOT Triggering geofence notification for area: ' + geofenceArea._id.toString() + ' Previous notification: ' + JSON.stringify(prevNotification));
+					console.log(`[LocationController] NOT Triggering geofence notification for area: ${geofenceArea._id} Previous notification: ${JSON.stringify(prevNotification)}`);
         }
         return true;
-      }));
+      })); // notifications
 
       //console.log(geofenceAreas);
       return true;
-    }));
+    })); // promise
 
 
 

@@ -214,7 +214,7 @@ class WebsocketServer
     try
     {
       const msg = JSON.parse(strMsg);
-      console.log('[WebsocketServer] onMessage type: ' + msg.type);
+      // console.log('[WebsocketServer] onMessage type: ' + msg.type);
 
       // Identify connection to user
       if(msg.type === 'token')
