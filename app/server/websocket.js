@@ -219,7 +219,6 @@ class WebsocketServer
       // Identify connection to user
       if(msg.type === 'token')
       {
-        console.log('[WebsocketServer] websocket.onMessage(token)');
         if(msg.token !== 'guest')
         {
           const decodedTokenResult = await validateToken(msg.token);
@@ -227,7 +226,7 @@ class WebsocketServer
           {
             this.#clients[decodedTokenResult.user._id] = {connection: connection, isAlive: true};
             // console.log(decodedTokenResult.user._id + ' is connected: ' + this.#clients[decodedTokenResult.user._id].isAlive);
-            console.log(`[WebsocketServer] decodedTokenResult.user._id: ${decodedTokenResult.user._id} is connected: ${this.#clients[decodedTokenResult.user._id].isAlive}`);
+            console.log(`[WebsocketServer] websocket.onMessage user: ${decodedTokenResult.user._id} is connected: ${this.#clients[decodedTokenResult.user._id].isAlive}`);
           }
         }
       }
