@@ -158,10 +158,10 @@ class WebsocketServer
     if (socket) {
       socket.connection.terminate();
       delete this.#clients[userId];
-      console.log(`[WebSocketServer] closing socket for user : ${userId}`)
+      console.log(`[WebSocketServer.closeToken] closing socket for user : ${userId}`)
     }
     else {
-      console.log(`[WebSocketServer] socket not found for user : ${userId}`)
+      console.log(`[WebSocketServer.closeToken] socket not found for user : ${userId}`)
     }
   }
   
