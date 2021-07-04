@@ -29,7 +29,6 @@ Router.use(BodyParser.json());
  */
 Router.post('/geofence', async (req, res) =>
 {
-  console.log('[LocationController] geofence' )
   let decodedTokenResult = null;
 	try
 	{
