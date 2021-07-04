@@ -178,8 +178,6 @@ class WebsocketServer
       const keys = Object.keys(this.#clients);
       for(let i = 0; i < keys.length; i++)
       {
-        console.log(`[WebSocketServer] heartbeat token : ${keys[i]}`)
-
         // If dead kill it
         if(!this.#clients[keys[i]].isAlive)
         {
@@ -233,7 +231,7 @@ class WebsocketServer
       // Keep connection alive
       else if(msg.type === 'heartbeat')
       {
-        console.log('[WebsocketServer] websocket.onMessage(heartbeat) client id: ' + msg.id);
+        console.log('[WebsocketServer] websocket.onMessage(heartbeat) user: ' + msg.id);
         this.#clients[msg.id].isAlive = true;
       }
 
