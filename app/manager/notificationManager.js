@@ -11,6 +11,8 @@ class NotificationManager
   #mNotification = null;
   #mSubscribableEvent = null;
   #mEventSubscription = null;
+  #mUser = null;
+  #mConfiguration = null;
   #serverMgr = null;
   #utilityMgr = null;
 
@@ -34,12 +36,16 @@ class NotificationManager
     @param  {Model.<Notification>}  mNotification So we can interact with notifications
     @param  {Model.<SubscribableEvent>} mSubscribableEvent  So we can interact with subscribable events
     @param  {Model.<EventSubscription>} mEventSubscription  So we can interact with subscriptions to events
+    @param  {Model.<user>} mUser  So we can interact with users
+    @param  {Model.<configuration>} mConfiguration  So we can interact with configurations
     @param  {ServerManager} serverMgr   Server manager so we can interact with websocket server
     @param  {UtilityManager} utilityMgr   Utility manager so we can interact with utilities
   */
   static Init(mNotification,
               mSubscribableEvent,
               mEventSubscription,
+              mUser,
+              mConfiguration,
               serverMgr,
               utilityMgr)
   {
@@ -67,6 +73,8 @@ class NotificationManager
     NotificationManager.#instance.#mNotification = mNotification;
     NotificationManager.#instance.#mSubscribableEvent = mSubscribableEvent;
     NotificationManager.#instance.#mEventSubscription = mEventSubscription;
+    NotificationManager.#instance.#mUser = mUser;
+    NotificationManager.#instance.#mConfiguration = mConfiguration;
     NotificationManager.#instance.#serverMgr = serverMgr;
     NotificationManager.#instance.#utilityMgr = utilityMgr;
 
@@ -295,7 +303,7 @@ class NotificationManager
       // If geofence area notification then we need to filter down the list of subscriptions by users with lastLocation's in the area
       if(triggeredByEntity.constructor.modelName !== 'geofencearea')
       {
-        let mapDisplayAlertRadius = await mConfiguration.findOne({ name: 'MAP_DISPLAY_ALERT_RADIUS' });
+        let mapDisplayAlertRadius = await NotificationManager.#instance.#mConfiguration.findOne({ name: 'MAP_DISPLAY_ALERT_RADIUS' });
         mapDisplayAlertRadius = parseInt(mapDisplayAlertRadius.value);
 
         // Find users near this point
@@ -320,7 +328,7 @@ class NotificationManager
           return user._id.toString();
         });
 
-        // Filter subscriptions by users in this list 
+        // Filter subscriptions by users in this list
         subscriptions = subscriptions.filter( (subscription) =>
         {
           return users.indexOf(subscription.createdBy._id.toString()) !== -1;

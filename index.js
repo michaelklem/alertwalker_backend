@@ -78,9 +78,13 @@ async function init(httpServer)
   const mNotification = modelMgr.getModel('notification');
   const mSubscribableEvent = modelMgr.getModel('subscribableevent');
   const mEventSubscription = modelMgr.getModel('eventsubscription');
+  const mUser = modelMgr.getModel('user');
+  const mConfiguration = modelMgr.getModel('configuration');
   const notificationMgr = await NotificationManager.Init( mNotification,
                                                           mSubscribableEvent,
                                                           mEventSubscription,
+                                                          mUser,
+                                                          mConfiguration,
                                                           serverMgr,
                                                           utilityMgr);
 
