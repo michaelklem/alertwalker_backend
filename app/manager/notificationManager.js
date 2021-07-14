@@ -28,7 +28,7 @@ class NotificationManager
   getServerMgr() {
     return this.#serverMgr
   }
-  
+
   /**
     Initialize NotificationManager properly
     @param  {Model.<Notification>}  mNotification So we can interact with notifications
@@ -124,7 +124,7 @@ class NotificationManager
 				{
 
           console.log('[NotificationManager.SubscribeUserToEvents] creating event subscription for user: ' + JSON.stringify(user) + '  subscribable event: ' + subscribableEvents[i]._id)
-          
+
 					await NotificationManager.#instance.#mEventSubscription.create(
 					{
 						event: subscribableEvents[i]._id,
@@ -219,7 +219,7 @@ class NotificationManager
         {
           // Handle subscriptions to this specific user
           console.log('[NotificationManager.HandleSubscriptionsFor] subscribableEvent: ' + JSON.stringify(subscribableEvents[i]))
-    
+
           orClause.push(
           {
             $and:
@@ -292,10 +292,48 @@ class NotificationManager
       //console.log(subscriptions);
       console.log('[NotificationManager.HandleSubscriptionsFor] found subscriptions: ' + JSON.stringify(subscriptions));
 
+      // If geofence area notification then we need to filter down the list of subscriptions by users with lastLocation's in the area
+      if(triggeredByEntity.constructor.modelName !== 'geofencearea')
+      {
+        let mapDisplayAlertRadius = await mConfiguration.findOne({ name: 'MAP_DISPLAY_ALERT_RADIUS' });
+        mapDisplayAlertRadius = parseInt(mapDisplayAlertRadius.value);
+
+        // Find users near this point
+        const users = NotificationManager.#instance.#mUser.find({
+          lastLocation:
+          {
+            $near:
+            {
+              $maxDistance: mapDisplayAlertRadius,
+              $geometry:
+              {
+                type: 'Point',
+                coordinates: triggeredByEntity.location.coordinates
+              }
+            }
+          },
+        });
+
+        // Filter down to just user ID
+        users = users.map( (user) =>
+        {
+          return user._id.toString();
+        });
+
+        // Filter subscriptions by users in this list 
+        subscriptions = subscriptions.filter( (subscription) =>
+        {
+          return users.indexOf(subscription.createdBy._id.toString()) !== -1;
+        });
+      }
+
       // Iterate subscriptions and create notifications
       for(let i = 0; i < subscriptions.length; i++)
       {
         let notification = null;
+
+        // Don't create notification here because location/geofence route will do it
+        // If this method is called for geofencealert create action then just do system notification (websocket)
         if(triggeredByEntity.constructor.modelName !== 'geofencearea')
         {
           const createParams =
@@ -315,7 +353,7 @@ class NotificationManager
         for(let j = 0; j < subscriptions[i].deliveryMethod.length; j++)
         {
           console.log('[NotificationManager.HandleSubscriptionsFor] Processing notification with subscription: ' + JSON.stringify(subscriptions));
-          
+
           switch(subscriptions[i].deliveryMethod[j])
           {
             case 'email':
@@ -326,7 +364,7 @@ class NotificationManager
               console.log('[NotificationManager.HandleSubscriptionsFor] push subscriptions[i]: ' + JSON.stringify( subscriptions[i] ));
               console.log('[NotificationManager.HandleSubscriptionsFor] push notification: ' +  JSON.stringify(notification) );
               console.log('[NotificationManager.HandleSubscriptionsFor] push triggeredByEntity: ' + JSON.stringify(triggeredByEntity) );
-              
+
               const utilityMgr = NotificationManager.#instance.#utilityMgr;
               await utilityMgr.get('pusher').SendPushForSubscription({
                 eventSubscription: subscriptions[i],
@@ -341,7 +379,7 @@ class NotificationManager
               try {
                 // Notify user via websocket if available
                 const serverMgr = NotificationManager.#instance.#serverMgr;
-                
+
                 console.log('[NotificationManager.HandleSubscriptionsFor] system subscriptions[i]: ' + JSON.stringify( subscriptions[i] ));
                 console.log('[NotificationManager.HandleSubscriptionsFor] system notification: ' +  notification );
                 console.log('[NotificationManager.HandleSubscriptionsFor] system triggeredByEntity: ' + triggeredByEntity );

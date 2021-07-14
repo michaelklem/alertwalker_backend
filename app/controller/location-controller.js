@@ -53,6 +53,7 @@ Router.post('/geofence', async (req, res) =>
 		const modelMgr = ModelManager.GetInstance();
 		const mGeofenceArea = modelMgr.getModel('geofencearea');
     const mNotification = modelMgr.getModel('notification');
+		const mUser = modelMgr.getModel('user');
 
     await Promise.all(req.body.map( async(location, i) =>
     {
@@ -63,6 +64,16 @@ Router.post('/geofence', async (req, res) =>
   		{
   			res.status(200).send({ error: 'Missing params' });
   		}
+
+			// Save user's last location
+			await mUser.updateById(decodedTokenResult.user._id,
+			{
+				lastLocation:
+				{
+	 			 type: 'Point',
+	 			 coordinates: [location.longitude, location.latitude]
+	 		 	}
+			});
 
 
       // get alerts created within the last two hours and within 500 meters of the users location
@@ -201,6 +212,16 @@ Router.post('/map', async (req, res) =>
    {
      return res.status(200).send({ error: 'Missing params' });
    }
+
+	 // Save user's last location
+	 await mUser.updateById(decodedTokenResult.user._id,
+	 {
+		 lastLocation:
+		 {
+			 type: 'Point',
+			 coordinates: [req.body.location.longitude, req.body.location.latitude]
+		 }
+	 });
 
    // Filter alerts more than 2 hours old
    var d = new Date();
