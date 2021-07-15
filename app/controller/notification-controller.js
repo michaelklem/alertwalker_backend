@@ -424,7 +424,7 @@ async function applySubscriptionsForUsers(users, subscribableEvents, mEventSubsc
 @function
 @inner
 @description Admin API to update subscriptions to events (if new event added after user already registered)
-@ignore
+@ignore 
 */
 Router.post('/update-subscriptions', async (req, res) =>
 {
