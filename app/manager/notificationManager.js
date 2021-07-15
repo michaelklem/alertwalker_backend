@@ -324,7 +324,7 @@ class NotificationManager
             }
           }
         };
-        const users = await NotificationManager.#instance.#mUser.find(searchParams);
+        let users = await NotificationManager.#instance.#mUser.find(searchParams);
 
         // Filter down to just user ID
         users = users.map( (user) =>
