@@ -346,7 +346,7 @@ Router.post('/update-subscription', async (req, res) =>
 
     const promises = req.body.eventSubscriptions.map( async(subscription) =>
     {
-      return await mEventSubscription.updateById(subscription._id, { trigger: subscription.trigger });
+      return await mEventSubscription.updateById(subscription._id, { isDeleted: subscription.isDeleted });
     });
 
     Promise.all(promises);
