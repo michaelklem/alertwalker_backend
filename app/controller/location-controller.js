@@ -225,10 +225,10 @@ Router.post('/map', async (req, res) =>
 	 });
 
 	 // Get user's event subscriptions so we can filter out what events to display
-	 const eventSubscriptions = await mEventSubscription.find({ createdBy: decodedTokenResult.user._id, isDeleted: false });
-	 const types = eventSubscriptions.map( (subscription => {
-		 return eventSubscription.trigger.geofenceAreaType;
-	 }));
+	 /*const eventSubscriptions = await mEventSubscription.find({ createdBy: decodedTokenResult.user._id, isDeleted: false });
+	 const types = mEventSubscriptions.map( (subscription => {
+		 return subscription.trigger.geofenceAreaType;
+	 }));*/
 
    // Filter alerts more than 2 hours old
    var d = new Date();
@@ -251,11 +251,11 @@ Router.post('/map', async (req, res) =>
      createdOn:
      {
        $gte: d
-     },
+     }/*,
 		 type:
 		 {
 			 $in: types
-		 }
+		 }*/
    });
 
    // Success
