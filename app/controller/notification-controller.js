@@ -16,7 +16,7 @@ Router.use(BodyParser.json());
  /**
 	 @name Initialize
 	 @route {POST}	/init
-	 @description Retrieve notifications for a user
+	 @description Retrieve notifications for a user, along with subscription preferences and alert types
 	 @authentication Requires a valid x-access-token
 	 @headerparam 	{JWT} 	x-access-token		Token to decrypt
 	 @headerparam	{String}	x-request-source 	(web|mobile)
@@ -49,10 +49,23 @@ Router.use(BodyParser.json());
 		// Models
  		const modelMgr = ModelManager.GetInstance();
 		const mNotification = modelMgr.getModel('notification');
+    const mGeofenceAreaType = modelMgr.getModel('geofenceareatype');
+    const mEventSubscription = modelMgr.getModel('eventsubscription');
 		if(!mNotification)
  		{
- 			return res.status(200).send({ error: 'Could not find notification' });
+ 			return res.status(200).send({ error: 'Could not find notification model' });
  		}
+    if(!mGeofenceAreaType)
+ 		{
+ 			return res.status(200).send({ error: 'Could not find geofence area type model' });
+ 		}
+    if(!mEventSubscription)
+ 		{
+ 			return res.status(200).send({ error: 'Could not find event subscription model' });
+ 		}
+
+    // Find geofence area types
+    const geofenceAreaTypes = await mGeofenceAreaType.find({ isDeleted: false }, { label: 1 });
 
 		// Find notifications
 		const notifications = await mNotification.find({ recipient: decodedTokenResult.user._id }, { createdOn: -1 });
@@ -60,6 +73,8 @@ Router.use(BodyParser.json());
 
  		res.status(200).send({
 			results: notifications,
+      geofenceAreaTypes: geofenceAreaTypes,
+      eventSubscriptions: eventSubscriptions,
 			token: decodedTokenResult.token,
 			error: null
 		});
@@ -427,7 +442,7 @@ async function applySubscriptionsForUsers(users, subscribableEvents, mEventSubsc
 						if(!subscription)
 						{
 							console.log('[NotificationController.applySubscriptionsForUsers] creating event subscription for subscribable event: ' + subscribableEvents[j]._id)
-							
+
 							await mEventSubscription.create(
 							{
 								event: subscribableEvents[j]._id,

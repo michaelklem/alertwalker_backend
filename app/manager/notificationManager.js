@@ -235,7 +235,8 @@ class NotificationManager
               { event: subscribableEvents[i]._id },
               { 'trigger.model': triggeredByEntity.createdBy.constructor.modelName },
               { 'trigger.id': triggeredByEntity.createdBy._id },
-              { isDeleted: false }
+              { isDeleted: false },  // When user unsubscribes they set this to deleted
+              { 'trigger.geofenceAreaType': triggeredByEntity.type._id } // Match on subscription to specific geofence area type
             ]
           });
 
@@ -286,6 +287,7 @@ class NotificationManager
                 { event: subscribableEvents[i]._id },
                 { 'trigger.model': subscribableEvents[i].triggers.values[j].model },
                 { 'trigger.id': subscribableEvents[i].triggers.values[j].id },
+                { 'trigger.geofenceAreaType': subscribableEvents[i].triggers.values[j].geofenceAreaType },
                 createdByFilter,
                 { isDeleted: false }
               ]
@@ -301,7 +303,7 @@ class NotificationManager
       console.log('[NotificationManager.HandleSubscriptionsFor] found subscriptions: ' + JSON.stringify(subscriptions));
 
       // If geofence area notification then we need to filter down the list of subscriptions by users with lastLocation's in the area
-      if(triggeredByEntity.constructor.modelName !== 'geofencearea')
+      if(triggeredByEntity.constructor.modelName === 'geofencearea')
       {
         let mapDisplayAlertRadius = await NotificationManager.#instance.#mConfiguration.findOne({ name: 'MAP_DISPLAY_ALERT_RADIUS' });
         mapDisplayAlertRadius = parseInt(mapDisplayAlertRadius.value);
@@ -327,6 +329,9 @@ class NotificationManager
         {
           return user._id.toString();
         });
+
+        console.log('Users in the area');
+        console.log(users);
 
         // Filter subscriptions by users in this list
         subscriptions = subscriptions.filter( (subscription) =>
