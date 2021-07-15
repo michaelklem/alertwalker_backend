@@ -313,7 +313,7 @@ Router.post('/read', async (req, res) =>
 @description User calls this to update their subscription settings
 @ignore
 */
-Router.post('/update-subscriptions', async (req, res) =>
+Router.post('/update-subscription', async (req, res) =>
 {
 	try
 	{
