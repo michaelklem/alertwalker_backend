@@ -451,7 +451,8 @@ async function applySubscriptionsForUsers(users, subscribableEvents, mEventSubsc
 								trigger:
 								{
 									model: subscribableEvents[j].triggers.values[k].model,
-									id: subscribableEvents[j].triggers.values[k].id
+									id: subscribableEvents[j].triggers.values[k].id,
+                  geofenceAreaType: subscribableEvents[j].triggers.values[k].geofenceAreaType,
 								},
 								deliveryMethod: [subscribableEvents[j].triggers.values[k].deliveryMethod]
 							}, users[i]);
