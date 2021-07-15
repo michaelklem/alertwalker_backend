@@ -53,7 +53,7 @@ Router.post('/geofence', async (req, res) =>
 		const modelMgr = ModelManager.GetInstance();
 		const mGeofenceArea = modelMgr.getModel('geofencearea');
     const mNotification = modelMgr.getModel('notification');
-		const mUser = modelMgr.getModel('user'); 
+		const mUser = modelMgr.getModel('user');
 
     await Promise.all(req.body.map( async(location, i) =>
     {
@@ -207,7 +207,6 @@ Router.post('/map', async (req, res) =>
    let mapDisplayAlertRadius = await mConfiguration.findOne({ name: 'MAP_DISPLAY_ALERT_RADIUS' });
    mapDisplayAlertRadius = parseInt(mapDisplayAlertRadius.value);
 
-   console.log(req.body);
    if(!req.body.location.latitude ||
       !req.body.location.longitude)
    {

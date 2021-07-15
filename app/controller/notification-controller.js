@@ -304,6 +304,121 @@ Router.post('/read', async (req, res) =>
 });
 
 
+
+
+/**
+@name update-subscription
+@function
+@inner
+@description User calls this to update their subscription settings
+@ignore
+*/
+Router.post('/update-subscriptions', async (req, res) =>
+{
+	try
+	{
+		// Validate headers
+		const headerValidation = await Ext.validateHeaders(req.headers);
+		if(headerValidation.error !== null)
+		{
+			return res.status(200).send({ error: headerValidation.error });
+		}
+
+		// Decode token to user ID and locate user
+		const decodedTokenResult = await Ext.validateToken(req.headers['x-access-token']);
+		if(decodedTokenResult.error !== null)
+		{
+			return res.status(200).send({ error: decodedTokenResult.error });
+		}
+
+	  if(!req.body.eventSubscriptions)
+    {
+      return res.status(200).send({ error: 'Missing event subscriptions' });
+    }
+
+		// Models
+		const modelMgr = ModelManager.GetInstance();
+		const mEventSubscription = modelMgr.getModel('eventsubscription');
+		if(!mEventSubscription)
+		{
+			return res.status(200).send({ error: 'Could not find event subscription' });
+		}
+
+    const promises = req.body.eventSubscriptions.map( async(subscription) =>
+    {
+      return await mEventSubscription.updateById(subscription._id, { trigger: subscription.trigger });
+    });
+
+    Promise.all(promises);
+
+		res.status(200).send(
+		{
+			token: decodedTokenResult.token,
+			results: req.body.eventSubscriptions,
+			error: null
+		});
+	}
+	catch(err)
+	{
+		await Log.Error(__filename, err);
+		res.status(200).send({ error: err.message });
+	}
+});
+
+async function applySubscriptionsForUsers(users, subscribableEvents, mEventSubscription)
+{
+	console.log('[NotificationController.applySubscriptionsForUsers] for users: ' + JSON.stringify(users))
+	console.log('[NotificationController.applySubscriptionsForUsers] for mEventSubscription: ' + JSON.stringify(mEventSubscription))
+
+	let subscription = null;
+	// Iterate users
+	for(let i = 0; i < users.length; i++)
+	{
+		// Iterate events and see who is not subscribed to what
+		for(let j = 0; j < subscribableEvents.length; j++)
+		{
+			// Iterate delivery methods and see who does not have all
+			for(let k = 0; k < subscribableEvents[j].triggers.values.length; k++)
+			{
+				if(subscribableEvents[j].triggers.values[k].deliveryMethod === 'system' ||
+					subscribableEvents[j].triggers.values[k].deliveryMethod === 'push')
+					{
+						// Check if user has subscribed to this event at all
+						subscription = await mEventSubscription.findOne({ event: subscribableEvents[j]._id, createdBy: users[i]._id });
+						// If not create it
+						if(!subscription)
+						{
+							console.log('[NotificationController.applySubscriptionsForUsers] creating event subscription for subscribable event: ' + subscribableEvents[j]._id)
+
+							await mEventSubscription.create(
+							{
+								event: subscribableEvents[j]._id,
+								trigger:
+								{
+									model: subscribableEvents[j].triggers.values[k].model,
+									id: subscribableEvents[j].triggers.values[k].id,
+                  geofenceAreaType: subscribableEvents[j].triggers.values[k].geofenceAreaType,
+								},
+								deliveryMethod: [subscribableEvents[j].triggers.values[k].deliveryMethod]
+							}, users[i]);
+						}
+						// Check if they have this delivery method, if not add it
+						else
+						{
+							if(subscription.deliveryMethod.indexOf(subscribableEvents[j].triggers.values[k].deliveryMethod) === -1)
+							{
+								subscription.deliveryMethod.push(subscribableEvents[j].triggers.values[k].deliveryMethod);
+								await subscription.save();
+							}
+						}
+					}
+			}
+		}
+	}
+}
+
+
+
 /**
 @name update-subscriptions
 @function
