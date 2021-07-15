@@ -203,6 +203,7 @@ Router.post('/map', async (req, res) =>
    const modelMgr = ModelManager.GetInstance();
    const mGeofenceArea = modelMgr.getModel('geofencearea');
    const mConfiguration = modelMgr.getModel('configuration');
+	 const mUser = modelMgr.getModel('user');
    let mapDisplayAlertRadius = await mConfiguration.findOne({ name: 'MAP_DISPLAY_ALERT_RADIUS' });
    mapDisplayAlertRadius = parseInt(mapDisplayAlertRadius.value);
 
