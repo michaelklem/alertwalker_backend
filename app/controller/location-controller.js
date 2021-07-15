@@ -53,7 +53,7 @@ Router.post('/geofence', async (req, res) =>
 		const modelMgr = ModelManager.GetInstance();
 		const mGeofenceArea = modelMgr.getModel('geofencearea');
     const mNotification = modelMgr.getModel('notification');
-		const mUser = modelMgr.getModel('user');
+		const mUser = modelMgr.getModel('user'); 
 
     await Promise.all(req.body.map( async(location, i) =>
     {
