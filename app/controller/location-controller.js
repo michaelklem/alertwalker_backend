@@ -54,6 +54,13 @@ Router.post('/geofence', async (req, res) =>
 		const mGeofenceArea = modelMgr.getModel('geofencearea');
     const mNotification = modelMgr.getModel('notification');
 		const mUser = modelMgr.getModel('user');
+		const mEventSubscription = modelMgr.getModel('eventSubscription');
+
+		// Get user's event subscriptions so we can filter out what events to display
+		const eventSubscriptions = await mEventSubscription.find({ createdBy: decodedTokenResult.user._id, isDeleted: false });
+	 	const types = mEventSubscriptions.map( (subscription => {
+	 		return subscription.trigger.geofenceAreaType;
+	 	}));
 
     await Promise.all(req.body.map( async(location, i) =>
     {
@@ -101,7 +108,11 @@ Router.post('/geofence', async (req, res) =>
 				createdBy:
 				{
 					$ne: decodedTokenResult.user._id
-				}
+				},
+				type:
+		 		{
+		 			$in: types
+		 		}
       }
 
       const geofenceAreas = await mGeofenceArea.find(query);

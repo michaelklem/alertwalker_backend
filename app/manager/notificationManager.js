@@ -300,7 +300,7 @@ class NotificationManager
 
       //console.log('subscriptions');
       //console.log(subscriptions);
-      console.log('[NotificationManager.HandleSubscriptionsFor] found subscriptions: ' + JSON.stringify(subscriptions));
+      //console.log('[NotificationManager.HandleSubscriptionsFor] found subscriptions: ' + JSON.stringify(subscriptions));
 
       // If geofence area notification then we need to filter down the list of subscriptions by users with lastLocation's in the area
       if(triggeredByEntity.constructor.modelName === 'geofencearea')

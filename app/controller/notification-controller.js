@@ -1,6 +1,7 @@
 const Environment 		= require('../environment');
 const Ext 			= require('../extension');
 const {ModelManager} = require('../manager');
+const Mongo = require('mongoose');
 const {Log}		= require('../model');
 const Router 		= require('express').Router();
 const BodyParser	= require('body-parser');
@@ -365,66 +366,13 @@ Router.post('/update-subscription', async (req, res) =>
 	}
 });
 
-async function applySubscriptionsForUsers(users, subscribableEvents, mEventSubscription)
-{
-	console.log('[NotificationController.applySubscriptionsForUsers] for users: ' + JSON.stringify(users))
-	console.log('[NotificationController.applySubscriptionsForUsers] for mEventSubscription: ' + JSON.stringify(mEventSubscription))
-
-	let subscription = null;
-	// Iterate users
-	for(let i = 0; i < users.length; i++)
-	{
-		// Iterate events and see who is not subscribed to what
-		for(let j = 0; j < subscribableEvents.length; j++)
-		{
-			// Iterate delivery methods and see who does not have all
-			for(let k = 0; k < subscribableEvents[j].triggers.values.length; k++)
-			{
-				if(subscribableEvents[j].triggers.values[k].deliveryMethod === 'system' ||
-					subscribableEvents[j].triggers.values[k].deliveryMethod === 'push')
-					{
-						// Check if user has subscribed to this event at all
-						subscription = await mEventSubscription.findOne({ event: subscribableEvents[j]._id, createdBy: users[i]._id });
-						// If not create it
-						if(!subscription)
-						{
-							console.log('[NotificationController.applySubscriptionsForUsers] creating event subscription for subscribable event: ' + subscribableEvents[j]._id)
-
-							await mEventSubscription.create(
-							{
-								event: subscribableEvents[j]._id,
-								trigger:
-								{
-									model: subscribableEvents[j].triggers.values[k].model,
-									id: subscribableEvents[j].triggers.values[k].id,
-                  geofenceAreaType: subscribableEvents[j].triggers.values[k].geofenceAreaType,
-								},
-								deliveryMethod: [subscribableEvents[j].triggers.values[k].deliveryMethod]
-							}, users[i]);
-						}
-						// Check if they have this delivery method, if not add it
-						else
-						{
-							if(subscription.deliveryMethod.indexOf(subscribableEvents[j].triggers.values[k].deliveryMethod) === -1)
-							{
-								subscription.deliveryMethod.push(subscribableEvents[j].triggers.values[k].deliveryMethod);
-								await subscription.save();
-							}
-						}
-					}
-			}
-		}
-	}
-}
-
-
 
 /**
 @name update-subscriptions
 @function
 @inner
 @description Admin API to update subscriptions to events (if new event added after user already registered)
-@ignore 
+@ignore
 */
 Router.post('/update-subscriptions', async (req, res) =>
 {
