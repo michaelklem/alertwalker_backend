@@ -308,6 +308,7 @@ class NotificationManager
         let mapDisplayAlertRadius = await NotificationManager.#instance.#mConfiguration.findOne({ name: 'MAP_DISPLAY_ALERT_RADIUS' });
         mapDisplayAlertRadius = parseInt(mapDisplayAlertRadius.value);
 
+        // Find users near this point
         const searchParams =
         {
           lastLocation:
@@ -323,10 +324,7 @@ class NotificationManager
             }
           }
         };
-        console.log(searchParams);
-        // Find users near this point
-        const users = NotificationManager.#instance.#mUser.find(searchParams);
-        console.log(users);
+        const users = await NotificationManager.#instance.#mUser.find(searchParams);
 
         // Filter down to just user ID
         users = users.map( (user) =>
