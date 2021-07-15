@@ -335,7 +335,10 @@ class NotificationManager
         console.log('Users in the area');
         console.log(users);
 
-        const subscriptionCreatedBy = subscriptions.map( (subscription) => { return subscription.createdBy._id.toString(); }));
+        const subscriptionCreatedBy = subscriptions.map( (subscription) =>
+        {
+          return subscription.createdBy._id.toString();
+        });
         console.log(subscriptionCreatedBy);
 
         // Filter subscriptions by users in this list
