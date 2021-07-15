@@ -335,11 +335,15 @@ class NotificationManager
         console.log('Users in the area');
         console.log(users);
 
+        console.log(subscriptions);
+
         // Filter subscriptions by users in this list
         subscriptions = subscriptions.filter( (subscription) =>
         {
           return users.indexOf(subscription.createdBy._id.toString()) !== -1;
         });
+
+        console.log(subscriptions);
       }
 
       // Iterate subscriptions and create notifications
