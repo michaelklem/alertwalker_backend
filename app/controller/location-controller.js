@@ -203,6 +203,7 @@ Router.post('/map', async (req, res) =>
    const modelMgr = ModelManager.GetInstance();
    const mGeofenceArea = modelMgr.getModel('geofencearea');
    const mConfiguration = modelMgr.getModel('configuration');
+	 const mEventSubscription = modelMgr.getModel('eventSubscription');
 	 const mUser = modelMgr.getModel('user');
    let mapDisplayAlertRadius = await mConfiguration.findOne({ name: 'MAP_DISPLAY_ALERT_RADIUS' });
    mapDisplayAlertRadius = parseInt(mapDisplayAlertRadius.value);
@@ -222,6 +223,12 @@ Router.post('/map', async (req, res) =>
 			 coordinates: [req.body.location.longitude, req.body.location.latitude]
 		 }
 	 });
+
+	 // Get user's event subscriptions so we can filter out what events to display
+	 const eventSubscriptions = await mEventSubscription.find({ createdBy: decodedTokenResult.user._id, isDeleted: false });
+	 const types = eventSubscriptions.map( (subscription => {
+		 return eventSubscription.trigger.geofenceAreaType;
+	 }));
 
    // Filter alerts more than 2 hours old
    var d = new Date();
@@ -244,7 +251,11 @@ Router.post('/map', async (req, res) =>
      createdOn:
      {
        $gte: d
-     }
+     },
+		 type:
+		 {
+			 $in: types
+		 }
    });
 
    // Success
