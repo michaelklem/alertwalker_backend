@@ -170,7 +170,7 @@ Router.post('/geofence', async (req, res) =>
 	}
 	catch(err)
 	{
-    console.log(err);
+    console.log('[geofence] error: ' + err);
     res.status(200).send({ error: err });
 	}
 });

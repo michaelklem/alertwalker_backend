@@ -95,6 +95,7 @@ class ModelManager
       // Populate map
       for(let i = 0; i < modelDocs.length; i++)
       {
+        console.log('[ModelManager] populateModels name: ' + modelDocs[i].name)
         this.#models.set(modelDocs[i].name, new Model(modelDocs[i]));
       }
       return (modelDocs.length > 0 ? true : false);
