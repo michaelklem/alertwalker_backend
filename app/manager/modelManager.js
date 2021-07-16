@@ -95,7 +95,7 @@ class ModelManager
       // Populate map
       for(let i = 0; i < modelDocs.length; i++)
       {
-        console.log('[ModelManager] populateModels name: ' + modelDocs[i].name)
+        // console.log('[ModelManager] populateModels name: ' + modelDocs[i].name)
         this.#models.set(modelDocs[i].name, new Model(modelDocs[i]));
       }
       return (modelDocs.length > 0 ? true : false);
@@ -114,6 +114,8 @@ class ModelManager
   */
   getModel(name)
   {
+    console.log('[ModelManager] getModel name: ' + name)
+    console.log('[ModelManager] getModels : ' + this.getModels())
     return this.#models.get(name);
   }
 
