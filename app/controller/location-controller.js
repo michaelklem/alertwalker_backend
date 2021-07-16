@@ -55,7 +55,8 @@ Router.post('/geofence', async (req, res) =>
     const mNotification = modelMgr.getModel('notification');
 		const mUser = modelMgr.getModel('user');
 		const mEventSubscription = modelMgr.getModel('eventSubscription');
-
+    console.log('[LocationController] geofence mNotification: ' + mNotification)
+    console.log('[LocationController] geofence mEventSubscription: ' + mEventSubscription)
 		// Get user's event subscriptions so we can filter out what events to display
 		const eventSubscriptions = await mEventSubscription.find({ createdBy: decodedTokenResult.user._id, isDeleted: false });
 	 	const types = mEventSubscriptions.map( (subscription => {

@@ -114,8 +114,8 @@ class ModelManager
   */
   getModel(name)
   {
-    console.log('[ModelManager] getModel name: ' + name)
-    console.log('[ModelManager] getModels : ' + this.getModels())
+    // console.log('[ModelManager] getModel name: ' + name)
+    // console.log('[ModelManager] getModels : ' + this.getModels())
     return this.#models.get(name);
   }
 
