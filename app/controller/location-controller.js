@@ -58,10 +58,10 @@ Router.post('/geofence', async (req, res) =>
     console.log('[LocationController] geofence mNotification: ' + mNotification)
     console.log('[LocationController] geofence mEventSubscription: ' + mEventSubscription)
 		// Get user's event subscriptions so we can filter out what events to display
-		const eventSubscriptions = await mEventSubscription.find({ createdBy: decodedTokenResult.user._id, isDeleted: false });
-	 	const types = mEventSubscriptions.map( (subscription => {
-	 		return subscription.trigger.geofenceAreaType;
-	 	}));
+		// const eventSubscriptions = await mEventSubscription.find({ createdBy: decodedTokenResult.user._id, isDeleted: false });
+	 	// const types = mEventSubscriptions.map( (subscription => {
+	 	// 	return subscription.trigger.geofenceAreaType;
+	 	// }));
 
     await Promise.all(req.body.map( async(location, i) =>
     {
@@ -110,10 +110,10 @@ Router.post('/geofence', async (req, res) =>
 				{
 					$ne: decodedTokenResult.user._id
 				},
-				type:
-		 		{
-		 			$in: types
-		 		}
+				// type:
+		 		// {
+		 		// 	$in: types
+		 		// }
       }
 
       const geofenceAreas = await mGeofenceArea.find(query);
@@ -215,7 +215,7 @@ Router.post('/map', async (req, res) =>
    const modelMgr = ModelManager.GetInstance();
    const mGeofenceArea = modelMgr.getModel('geofencearea');
    const mConfiguration = modelMgr.getModel('configuration');
-	 const mEventSubscription = modelMgr.getModel('eventSubscription');
+	 const mEventSubscription = modelMgr.getModel('eventsubscription');
 	 const mUser = modelMgr.getModel('user');
    let mapDisplayAlertRadius = await mConfiguration.findOne({ name: 'MAP_DISPLAY_ALERT_RADIUS' });
    mapDisplayAlertRadius = parseInt(mapDisplayAlertRadius.value);
