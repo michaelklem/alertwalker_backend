@@ -149,7 +149,7 @@ Router.post('/init', async (req, res) =>
 		let mapCreateDelta = await mConfiguration.findOne({ name: 'MAP_CREATE_DELTA' });
 		let useSecondAlertType = await mConfiguration.findOne({ name: 'USE_SECOND_ALERT_TYPE' });
 		mapCreateDelta = mapCreateDelta.value;
-
+		console.log('XXXXXX useSecondAlertType: ' + useSecondAlertType.value)
 		res.status(200).send(
 		{
 			error: null,
