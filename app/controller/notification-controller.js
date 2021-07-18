@@ -72,7 +72,7 @@ Router.use(BodyParser.json());
 
 		// Find notifications
 		const notifications = await mNotification.find({ recipient: decodedTokenResult.user._id }, { createdOn: -1 });
-	 	console.log(`[Notifications.init] notifications found for user ${decodedTokenResult.user._id} ${notifications.length}`)
+	 	console.log(`[Notifications.init] notifications found for user ${decodedTokenResult.user._id} ${JSON.stringify(notifications)}`)
 
  		res.status(200).send({
 			results: notifications,
