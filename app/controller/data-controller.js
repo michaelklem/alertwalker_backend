@@ -4,10 +4,11 @@ const { Log }           = require('../model');
 const { ModelManager, NotificationManager }  = require('../manager');
 const Multiparty    = require('multiparty');
 const Router        = require('express').Router();
-const Environment 		= require('../environment');
-const nodemailer = require('nodemailer');
-const { google } = require("googleapis");
-const OAuth2 = google.auth.OAuth2;
+// const Environment 		= require('../environment');
+// const nodemailer = require('nodemailer');
+// const { google } = require("googleapis");
+// const OAuth2 = google.auth.OAuth2;
+const {Emailer} = require('../utility')
 
 // For handling JSON
 Router.use(BodyParser.urlencoded({ extended: true, limit: '50mb' }));
@@ -19,63 +20,48 @@ Router.use(BodyParser.json({ limit: '50mb' }));
  */
 
 
-/*
-	Oauth client id
-	888763880230-kpcpqkj062qdl8atchtc95i0pjque7tr.apps.googleusercontent.com
+// /*
 
-	Oauth secret 
-	mBh6D9dQ7X_dterBxQpXdfqd
+// */
+// function sendEmail(subject, body) {
+// 	const oauth2Client = new OAuth2(
+// 			Environment.GMAIL_OAUTH_CLIENT_ID, // ClientID
+// 			Environment.GMAIL_OAUTH_CLIENT_SECRET, // Client Secret
+// 			"https://developers.google.com/oauthplayground" // Redirect URL
+// 	);
 
-	"refresh_token": "1//04vxCeOoKwESSCgYIARAAGAQSNwF-L9IrsqsPAp0FxzZ47qeOEAqXCOLLtD4zZKOhEolsNCLGXn7aGZJOxeY25k2L1C3jH0TF2M8"
+// 	oauth2Client.setCredentials({
+// 			refresh_token: Environment.GMAIL_OAUTH_REFRESH_TOKEN
+// 	});
+// 	const accessToken = oauth2Client.getAccessToken()
 
-*/
-function sendEmail(subject, body) {
-	const oauth2Client = new OAuth2(
-			Environment.GMAIL_OAUTH_CLIENT_ID, // ClientID
-			Environment.GMAIL_OAUTH_CLIENT_SECRET, // Client Secret
-			"https://developers.google.com/oauthplayground" // Redirect URL
-	);
+//   var mail = nodemailer.createTransport({
+//     service: 'gmail',
+//     auth: {
+//           type: "OAuth2",
+//           user: Environment.EMAIL_ADDRESS, 
+//           clientId: Environment.GMAIL_OAUTH_CLIENT_ID,
+//           clientSecret: Environment.GMAIL_OAUTH_CLIENT_SECRET,
+//           refreshToken: Environment.GMAIL_OAUTH_REFRESH_TOKEN,
+//           accessToken: accessToken,
+// 					tls: {
+// 						rejectUnauthorized: false
+// 					}
+// 				}
+//   });
 
-	oauth2Client.setCredentials({
-			refresh_token: Environment.GMAIL_OAUTH_REFRESH_TOKEN
-	});
-	const accessToken = oauth2Client.getAccessToken()
+//   var mailOptions = {
+//     from: Environment.EMAIL_ADDRESS,
+//     to: Environment.EMAIL_ADDRESS,
+//     subject: `[AlertWalker] ${subject}`,
+//     html: body
+//   }
 
-  var mail = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-          type: "OAuth2",
-          user: Environment.EMAIL_ADDRESS, 
-          clientId: Environment.GMAIL_OAUTH_CLIENT_ID,
-          clientSecret: Environment.GMAIL_OAUTH_CLIENT_SECRET,
-          refreshToken: Environment.GMAIL_OAUTH_REFRESH_TOKEN,
-          accessToken: accessToken,
-					tls: {
-  rejectUnauthorized: false
-}
-    }
-  });
-
-  var mailOptions = {
-    from: Environment.EMAIL_ADDRESS,
-    to: Environment.EMAIL_ADDRESS,
-    subject: `[AlertWalker] ${subject}`,
-    html: body
-  }
-
-	mail.sendMail(mailOptions, (error, response) => {
-			error ? console.log(error) : console.log(response);
-			mail.close();
-	});
-
-  // mail.sendMail(mailOptions, function(error, info){
-  //       if (error) {
-  //         console.log(error);
-  //       } else {
-  //         console.log('Email sent: ' + info.response);
-  //       }
-  // });
-}
+// 	mail.sendMail(mailOptions, (error, response) => {
+// 			error ? console.log(error) : console.log(response);
+// 			mail.close();
+// 	});
+// }
 
 
 /**
@@ -176,7 +162,7 @@ Router.post('/create', async (req, res) =>
 
 				// Need to send out push notifications too via sockets so the alert
 				// displays on user's maps when it is created
-				sendEmail('alert created', `An alert was created by user email: ${decodedTokenResult.user.email} and id: ${decodedTokenResult.user._id}`)
+				Emailer.sendEmailToSupport('alert created', `An alert was created by user email: ${decodedTokenResult.user.email} and id: ${decodedTokenResult.user._id}`)
 				
 				// Handle notifications
 				await NotificationManager.HandleSubscriptionsFor(	fields.model[0],

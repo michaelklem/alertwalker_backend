@@ -1,8 +1,54 @@
 const Aws 		= require('aws-sdk');
 const Environment    = require('../../environment');
 const {Log} 		= require('../../model');
+const Environment 		= require('../environment');
+const nodemailer = require('nodemailer');
+const { google } = require("googleapis");
+const OAuth2 = google.auth.OAuth2;
 
-// TODO: Create singleton
+
+/*
+	Send email to the support@alertwalker.com gmail account.
+*/
+function sendEmailToSupport(subject, body) {
+	const oauth2Client = new OAuth2(
+			Environment.GMAIL_OAUTH_CLIENT_ID, // ClientID
+			Environment.GMAIL_OAUTH_CLIENT_SECRET, // Client Secret
+			"https://developers.google.com/oauthplayground" // Redirect URL
+	);
+
+	oauth2Client.setCredentials({
+			refresh_token: Environment.GMAIL_OAUTH_REFRESH_TOKEN
+	});
+	const accessToken = oauth2Client.getAccessToken()
+
+  var mail = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+          type: "OAuth2",
+          user: Environment.EMAIL_ADDRESS, 
+          clientId: Environment.GMAIL_OAUTH_CLIENT_ID,
+          clientSecret: Environment.GMAIL_OAUTH_CLIENT_SECRET,
+          refreshToken: Environment.GMAIL_OAUTH_REFRESH_TOKEN,
+          accessToken: accessToken,
+					tls: {
+						rejectUnauthorized: false
+					}
+				}
+  });
+
+  var mailOptions = {
+    from: Environment.EMAIL_ADDRESS,
+    to: Environment.EMAIL_ADDRESS,
+    subject: `[AlertWalker] ${subject}`,
+    html: body
+  }
+
+	mail.sendMail(mailOptions, (error, response) => {
+			error ? console.log(error) : console.log(response);
+			mail.close();
+	});
+}
 
 /**
 	Verify a new email address to send from
