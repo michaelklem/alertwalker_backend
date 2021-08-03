@@ -31,13 +31,13 @@ Router.use(BodyParser.json({ limit: '50mb' }));
 */
 function sendEmail(subject, body) {
 	const oauth2Client = new OAuth2(
-			"888763880230-kpcpqkj062qdl8atchtc95i0pjque7tr.apps.googleusercontent.com", // ClientID
-			"mBh6D9dQ7X_dterBxQpXdfqd", // Client Secret
+			Environment.GMAIL_OAUTH_CLIENT_ID, // ClientID
+			Environment.GMAIL_OAUTH_CLIENT_SECRET, // Client Secret
 			"https://developers.google.com/oauthplayground" // Redirect URL
 	);
 
 	oauth2Client.setCredentials({
-			refresh_token: "1//04vxCeOoKwESSCgYIARAAGAQSNwF-L9IrsqsPAp0FxzZ47qeOEAqXCOLLtD4zZKOhEolsNCLGXn7aGZJOxeY25k2L1C3jH0TF2M8"
+			refresh_token: Environment.GMAIL_OAUTH_REFRESH_TOKEN
 	});
 	const accessToken = oauth2Client.getAccessToken()
 
@@ -45,10 +45,10 @@ function sendEmail(subject, body) {
     service: 'gmail',
     auth: {
           type: "OAuth2",
-          user: "support@alertwalker.com", 
-          clientId: "888763880230-kpcpqkj062qdl8atchtc95i0pjque7tr.apps.googleusercontent.com",
-          clientSecret: "mBh6D9dQ7X_dterBxQpXdfqd",
-          refreshToken: "1//04vxCeOoKwESSCgYIARAAGAQSNwF-L9IrsqsPAp0FxzZ47qeOEAqXCOLLtD4zZKOhEolsNCLGXn7aGZJOxeY25k2L1C3jH0TF2M8",
+          user: Environment.EMAIL_ADDRESS, 
+          clientId: Environment.GMAIL_OAUTH_CLIENT_ID,
+          clientSecret: Environment.GMAIL_OAUTH_CLIENT_SECRET,
+          refreshToken: Environment.GMAIL_OAUTH_REFRESH_TOKEN,
           accessToken: accessToken,
 					tls: {
   rejectUnauthorized: false
@@ -176,7 +176,7 @@ Router.post('/create', async (req, res) =>
 
 				// Need to send out push notifications too via sockets so the alert
 				// displays on user's maps when it is created
-				sendEmail('alert created', `An alert was created by user: ${decodedTokenResult.user}`)
+				sendEmail('alert created', `An alert was created by user email: ${decodedTokenResult.user.email} and id: ${decodedTokenResult.user._id}`)
 				
 				// Handle notifications
 				await NotificationManager.HandleSubscriptionsFor(	fields.model[0],

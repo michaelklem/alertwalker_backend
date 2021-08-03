@@ -384,9 +384,9 @@ class NotificationManager
               break;
             case 'push':
               // Notify user via push notification
-              console.log('[NotificationManager.HandleSubscriptionsFor] push subscriptions[i]: ' + JSON.stringify( subscriptions[i] ));
-              console.log('[NotificationManager.HandleSubscriptionsFor] push notification: ' +  JSON.stringify(notification) );
-              console.log('[NotificationManager.HandleSubscriptionsFor] push triggeredByEntity: ' + JSON.stringify(triggeredByEntity) );
+              console.log('   [NotificationManager.HandleSubscriptionsFor] push subscriptions[i]: ' + JSON.stringify( subscriptions[i] ));
+              console.log('   [NotificationManager.HandleSubscriptionsFor] push notification: ' +  JSON.stringify(notification) );
+              console.log('   [NotificationManager.HandleSubscriptionsFor] push triggeredByEntity: ' + JSON.stringify(triggeredByEntity) );
 
               const utilityMgr = NotificationManager.#instance.#utilityMgr;
               await utilityMgr.get('pusher').SendPushForSubscription({
@@ -403,9 +403,9 @@ class NotificationManager
                 // Notify user via websocket if available
                 const serverMgr = NotificationManager.#instance.#serverMgr;
 
-                console.log('[NotificationManager.HandleSubscriptionsFor] system subscriptions[i]: ' + JSON.stringify( subscriptions[i] ));
-                console.log('[NotificationManager.HandleSubscriptionsFor] system notification: ' +  notification );
-                console.log('[NotificationManager.HandleSubscriptionsFor] system triggeredByEntity: ' + triggeredByEntity );
+                console.log('   [NotificationManager.HandleSubscriptionsFor] system subscriptions[i]: ' + JSON.stringify( subscriptions[i] ));
+                console.log('   [NotificationManager.HandleSubscriptionsFor] system notification: ' +  notification );
+                console.log('   [NotificationManager.HandleSubscriptionsFor] system triggeredByEntity: ' + triggeredByEntity );
 
                 if(notification)
                 {
