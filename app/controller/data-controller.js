@@ -4,10 +4,6 @@ const { Log }           = require('../model');
 const { ModelManager, NotificationManager }  = require('../manager');
 const Multiparty    = require('multiparty');
 const Router        = require('express').Router();
-// const Environment 		= require('../environment');
-// const nodemailer = require('nodemailer');
-// const { google } = require("googleapis");
-// const OAuth2 = google.auth.OAuth2;
 const {Emailer} = require('../utility')
 
 // For handling JSON
@@ -18,50 +14,6 @@ Router.use(BodyParser.json({ limit: '50mb' }));
 	API routes providing data related tools such as retrieval, updating, and removing.
   @module data/
  */
-
-
-// /*
-
-// */
-// function sendEmail(subject, body) {
-// 	const oauth2Client = new OAuth2(
-// 			Environment.GMAIL_OAUTH_CLIENT_ID, // ClientID
-// 			Environment.GMAIL_OAUTH_CLIENT_SECRET, // Client Secret
-// 			"https://developers.google.com/oauthplayground" // Redirect URL
-// 	);
-
-// 	oauth2Client.setCredentials({
-// 			refresh_token: Environment.GMAIL_OAUTH_REFRESH_TOKEN
-// 	});
-// 	const accessToken = oauth2Client.getAccessToken()
-
-//   var mail = nodemailer.createTransport({
-//     service: 'gmail',
-//     auth: {
-//           type: "OAuth2",
-//           user: Environment.EMAIL_ADDRESS, 
-//           clientId: Environment.GMAIL_OAUTH_CLIENT_ID,
-//           clientSecret: Environment.GMAIL_OAUTH_CLIENT_SECRET,
-//           refreshToken: Environment.GMAIL_OAUTH_REFRESH_TOKEN,
-//           accessToken: accessToken,
-// 					tls: {
-// 						rejectUnauthorized: false
-// 					}
-// 				}
-//   });
-
-//   var mailOptions = {
-//     from: Environment.EMAIL_ADDRESS,
-//     to: Environment.EMAIL_ADDRESS,
-//     subject: `[AlertWalker] ${subject}`,
-//     html: body
-//   }
-
-// 	mail.sendMail(mailOptions, (error, response) => {
-// 			error ? console.log(error) : console.log(response);
-// 			mail.close();
-// 	});
-// }
 
 
 /**
@@ -162,7 +114,9 @@ Router.post('/create', async (req, res) =>
 
 				// Need to send out push notifications too via sockets so the alert
 				// displays on user's maps when it is created
-				Emailer.sendEmailToSupport('alert created', `An alert was created by user email: ${decodedTokenResult.user.email} and id: ${decodedTokenResult.user._id}`)
+				console.log('999999 ' + fields.location.note)
+				console.log('999999 ' + fields.location.coordinates[0])
+				Emailer.sendEmailToSupport('alert created', `An alert was created by user email: ${decodedTokenResult.user.email} and id: ${decodedTokenResult.user._id} with location coords: ${fields.coordinates[0], fields.coordinates[1]} and note: ${fields.note}`)
 				
 				// Handle notifications
 				await NotificationManager.HandleSubscriptionsFor(	fields.model[0],
