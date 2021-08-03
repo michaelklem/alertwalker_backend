@@ -6,6 +6,8 @@ const Multiparty    = require('multiparty');
 const Router        = require('express').Router();
 const Environment 		= require('../environment');
 const nodemailer = require('nodemailer');
+const { google } = require("googleapis");
+const OAuth2 = google.auth.OAuth2;
 
 // For handling JSON
 Router.use(BodyParser.urlencoded({ extended: true, limit: '50mb' }));
@@ -17,12 +19,40 @@ Router.use(BodyParser.json({ limit: '50mb' }));
  */
 
 
+/*
+	Oauth client id
+	888763880230-kpcpqkj062qdl8atchtc95i0pjque7tr.apps.googleusercontent.com
+
+	Oauth secret 
+	mBh6D9dQ7X_dterBxQpXdfqd
+
+	"refresh_token": "1//04vxCeOoKwESSCgYIARAAGAQSNwF-L9IrsqsPAp0FxzZ47qeOEAqXCOLLtD4zZKOhEolsNCLGXn7aGZJOxeY25k2L1C3jH0TF2M8"
+
+*/
 function sendEmail(subject, body) {
+	const oauth2Client = new OAuth2(
+			"888763880230-kpcpqkj062qdl8atchtc95i0pjque7tr.apps.googleusercontent.com", // ClientID
+			"mBh6D9dQ7X_dterBxQpXdfqd", // Client Secret
+			"https://developers.google.com/oauthplayground" // Redirect URL
+	);
+
+	oauth2Client.setCredentials({
+			refresh_token: "1//04vxCeOoKwESSCgYIARAAGAQSNwF-L9IrsqsPAp0FxzZ47qeOEAqXCOLLtD4zZKOhEolsNCLGXn7aGZJOxeY25k2L1C3jH0TF2M8"
+	});
+	const accessToken = oauth2Client.getAccessToken()
+
   var mail = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-      user: Environment.EMAIL_ADDRESS,
-      pass: Environment.EMAIL_PASSWORD
+          type: "OAuth2",
+          user: "support@alertwalker.com", 
+          clientId: "888763880230-kpcpqkj062qdl8atchtc95i0pjque7tr.apps.googleusercontent.com",
+          clientSecret: "mBh6D9dQ7X_dterBxQpXdfqd",
+          refreshToken: "1//04vxCeOoKwESSCgYIARAAGAQSNwF-L9IrsqsPAp0FxzZ47qeOEAqXCOLLtD4zZKOhEolsNCLGXn7aGZJOxeY25k2L1C3jH0TF2M8",
+          accessToken: accessToken,
+					tls: {
+  rejectUnauthorized: false
+}
     }
   });
 
@@ -33,13 +63,18 @@ function sendEmail(subject, body) {
     html: body
   }
 
-  mail.sendMail(mailOptions, function(error, info){
-        if (error) {
-          console.log(error);
-        } else {
-          console.log('Email sent: ' + info.response);
-        }
-  });
+	mail.sendMail(mailOptions, (error, response) => {
+			error ? console.log(error) : console.log(response);
+			mail.close();
+	});
+
+  // mail.sendMail(mailOptions, function(error, info){
+  //       if (error) {
+  //         console.log(error);
+  //       } else {
+  //         console.log('Email sent: ' + info.response);
+  //       }
+  // });
 }
 
 
