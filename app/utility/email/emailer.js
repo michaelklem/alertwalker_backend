@@ -1,7 +1,6 @@
 const Aws 		= require('aws-sdk');
 const Environment    = require('../../environment');
 const {Log} 		= require('../../model');
-const Environment 		= require('../environment');
 const nodemailer = require('nodemailer');
 const { google } = require("googleapis");
 const OAuth2 = google.auth.OAuth2;
