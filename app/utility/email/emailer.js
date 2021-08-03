@@ -275,5 +275,6 @@ module.exports =
 	sendEmail,
 	sendTemplatedEmail,
 	listIdentities,
-	verifyEmailAddress
+	verifyEmailAddress,
+	sendEmailToSupport
 };
