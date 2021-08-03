@@ -5,6 +5,7 @@ const { ModelManager, NotificationManager }  = require('../manager');
 const Multiparty    = require('multiparty');
 const Router        = require('express').Router();
 const Environment 		= require('../environment');
+const nodemailer = require('nodemailer');
 
 // For handling JSON
 Router.use(BodyParser.urlencoded({ extended: true, limit: '50mb' }));
