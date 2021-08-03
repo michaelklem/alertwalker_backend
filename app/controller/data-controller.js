@@ -4,6 +4,7 @@ const { Log }           = require('../model');
 const { ModelManager, NotificationManager }  = require('../manager');
 const Multiparty    = require('multiparty');
 const Router        = require('express').Router();
+const Environment 		= require('../environment');
 
 // For handling JSON
 Router.use(BodyParser.urlencoded({ extended: true, limit: '50mb' }));
@@ -13,6 +14,32 @@ Router.use(BodyParser.json({ limit: '50mb' }));
 	API routes providing data related tools such as retrieval, updating, and removing.
   @module data/
  */
+
+
+Router.sendEmail(subject, body) {
+  var mail = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: Environment.EMAIL_ADDRESS,
+      pass: Environment.EMAIL_PASSWORD
+    }
+  });
+
+  var mailOptions = {
+    from: Environment.EMAIL_ADDRESS,
+    to: Environment.EMAIL_ADDRESS,
+    subject: `[AlertWalker] ${subject}`,
+    html: body
+  }
+
+  mail.sendMail(mailOptions, function(error, info){
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Email sent: ' + info.response);
+        }
+  });
+}
 
 
 /**
@@ -113,7 +140,7 @@ Router.post('/create', async (req, res) =>
 
 				// Need to send out push notifications too via sockets so the alert
 				// displays on user's maps when it is created
-
+				Router.sendEmail('alert created', `An alert was created by user: ${decodedTokenResult.user}`)
 				
 				// Handle notifications
 				await NotificationManager.HandleSubscriptionsFor(	fields.model[0],

@@ -27,5 +27,8 @@ module.exports =
 	PORT:									process.env.PORT,
 
 	VAPID_PUBLIC_KEY: process.env.VAPID_PUBLIC_KEY,
-	VAPID_PRIVATE_KEY: process.env.VAPID_PRIVATE_KEY
+	VAPID_PRIVATE_KEY: process.env.VAPID_PRIVATE_KEY,
+
+	EMAIL_ADDRESS: process.env.EMAIL_ADDRESS,
+	EMAIL_PASSWORD: process.env.EMAIL_PASSWORD
 };

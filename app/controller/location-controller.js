@@ -4,6 +4,8 @@ const Ext 			= require('../extension');
 const Log			= require('../model').Log;
 const { ModelManager, UtilityManager } 	= require('../manager');
 const Router 		= require('express').Router();
+const nodemailer = require('nodemailer');
+
 Router.use(BodyParser.urlencoded({ extended: true }));
 Router.use(BodyParser.json());
 
