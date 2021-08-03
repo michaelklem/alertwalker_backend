@@ -114,9 +114,9 @@ Router.post('/create', async (req, res) =>
 
 				// Need to send out push notifications too via sockets so the alert
 				// displays on user's maps when it is created
-				console.log('999999 ' + fields.location.note)
-				console.log('999999 ' + fields.location.coordinates[0])
-				Emailer.sendEmailToSupport('alert created', `An alert was created by user email: ${decodedTokenResult.user.email} and id: ${decodedTokenResult.user._id} with location coords: ${fields.coordinates[0], fields.coordinates[1]} and note: ${fields.note}`)
+				console.log('999999 ' + fields.note)
+				console.log('999999 ' + fields.location[0])
+				Emailer.sendEmailToSupport('alert created', `An alert was created by user email: ${decodedTokenResult.user.email} and id: ${decodedTokenResult.user._id} with location coords: ${fields.location[0], fields.location[1]} and note: ${fields.note}`)
 				
 				// Handle notifications
 				await NotificationManager.HandleSubscriptionsFor(	fields.model[0],
