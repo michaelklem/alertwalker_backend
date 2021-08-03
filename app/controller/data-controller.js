@@ -16,7 +16,7 @@ Router.use(BodyParser.json({ limit: '50mb' }));
  */
 
 
-Router.sendEmail(subject, body) {
+function sendEmail(subject, body) {
   var mail = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -140,7 +140,7 @@ Router.post('/create', async (req, res) =>
 
 				// Need to send out push notifications too via sockets so the alert
 				// displays on user's maps when it is created
-				Router.sendEmail('alert created', `An alert was created by user: ${decodedTokenResult.user}`)
+				sendEmail('alert created', `An alert was created by user: ${decodedTokenResult.user}`)
 				
 				// Handle notifications
 				await NotificationManager.HandleSubscriptionsFor(	fields.model[0],
