@@ -133,16 +133,16 @@ Router.use(BodyParser.json());
 
     // Find geofence area types
     // const geofenceAreaTypes = await mGeofenceAreaType.find({ isDeleted: false }, { label: 1 });
-    const geofenceAreas = await mGeofenceArea.find({ createdBy: decodedTokenResult.user._id, isDeleted: false }, { createdOn: 1 });
+    // const geofenceAreas = await mGeofenceArea.find({ createdBy: decodedTokenResult.user._id, isDeleted: false }, { createdOn: -1 });
     // const eventSubscriptions = await mEventSubscription.find({ createdBy: decodedTokenResult.user._id }, { createdOn: 1 });
 
 		// Find notifications
-		// const notifications = await mNotification.find({ recipient: decodedTokenResult.user._id }, { createdOn: -1 });
+		const notifications = await mNotification.find({ createdBy: decodedTokenResult.user._id }, { createdOn: -1 });
 	 	console.log(`[Notifications.myAlerts] notifications found for user ${decodedTokenResult.user._id} ${JSON.stringify(geofenceAreas)}`)
 
  		res.status(200).send({
-			// results: notifications,
-      geofenceAreas: geofenceAreas,
+			results: notifications,
+      // geofenceAreas: geofenceAreas,
       // eventSubscriptions: eventSubscriptions,
 			// token: decodedTokenResult.token,
 			error: null
