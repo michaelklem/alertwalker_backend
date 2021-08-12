@@ -115,6 +115,7 @@ Router.use(BodyParser.json());
 		// Models
  		const modelMgr = ModelManager.GetInstance();
 		const mNotification = modelMgr.getModel('notification');
+    const mGeofenceArea = modelMgr.getModel('geofencearea');
     const mGeofenceAreaType = modelMgr.getModel('geofenceareatype');
     const mEventSubscription = modelMgr.getModel('eventsubscription');
 		if(!mNotification)
@@ -132,7 +133,7 @@ Router.use(BodyParser.json());
 
     // Find geofence area types
     // const geofenceAreaTypes = await mGeofenceAreaType.find({ isDeleted: false }, { label: 1 });
-    const geofenceAreaTypes = await mGeofenceAreaType.find({ createdBy: decodedTokenResult.user._id }, { createdOn: 1 });
+    const geofenceAreas = await mGeofenceArea.find({ createdBy: decodedTokenResult.user._id, isDeleted: false }, { createdOn: 1 });
     // const eventSubscriptions = await mEventSubscription.find({ createdBy: decodedTokenResult.user._id }, { createdOn: 1 });
 
 		// Find notifications
@@ -141,7 +142,7 @@ Router.use(BodyParser.json());
 
  		res.status(200).send({
 			// results: notifications,
-      geofenceAreaTypes: geofenceAreaTypes,
+      geofenceAreas: geofenceAreas,
       // eventSubscriptions: eventSubscriptions,
 			// token: decodedTokenResult.token,
 			error: null
