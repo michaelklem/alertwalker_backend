@@ -132,8 +132,7 @@ Router.use(BodyParser.json());
 
     // Find geofence area types
     // const geofenceAreaTypes = await mGeofenceAreaType.find({ isDeleted: false }, { label: 1 });
-    const geofenceAreaTypes = await mGeofenceAreaType.find({ isDeleted: false, createdBy: decodedTokenResult.user._id });
-
+    const geofenceAreaTypes = await mGeofenceAreaType.find({ createdBy: decodedTokenResult.user._id }, { createdOn: 1 });
     // const eventSubscriptions = await mEventSubscription.find({ createdBy: decodedTokenResult.user._id }, { createdOn: 1 });
 
 		// Find notifications
