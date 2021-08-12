@@ -142,10 +142,10 @@ Router.use(BodyParser.json());
 
  		res.status(200).send({
 			// results: notifications,
-      geofenceAreaTypes: geofenceAreaTypes
+      geofenceAreaTypes: geofenceAreaTypes,
       // eventSubscriptions: eventSubscriptions,
 			// token: decodedTokenResult.token,
-			// error: null
+			error: null
 		});
  	}
  	catch(err)
