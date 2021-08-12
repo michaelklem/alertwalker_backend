@@ -138,7 +138,7 @@ Router.use(BodyParser.json());
 
 		// Find notifications
 		const notifications = await mNotification.find({ createdBy: decodedTokenResult.user._id }, { createdOn: -1 });
-	 	console.log(`[Notifications.myAlerts] notifications found for user ${decodedTokenResult.user._id} ${JSON.stringify(geofenceAreas)}`)
+	 	console.log(`[Notifications.myAlerts] notifications found for user ${decodedTokenResult.user._id} ${JSON.stringify(notifications)}`)
 
  		res.status(200).send({
 			results: notifications,
