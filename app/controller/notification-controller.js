@@ -90,6 +90,71 @@ Router.use(BodyParser.json());
  });
 
 
+ // Returns alerts (notifications) created by a user
+ Router.post('/myAlerts', async (req, res) =>
+ {
+ 	const configs = []
+ 	try
+ 	{
+	 	console.log('[Notifications.myAlerts]')
+
+		// Validate headers
+		const headerValidation = await Ext.validateHeaders(req.headers);
+		if(headerValidation.error !== null)
+		{
+			return res.status(200).send({ error: headerValidation.error });
+		}
+
+		// Decode token to user ID and locate user
+		const decodedTokenResult = await Ext.validateToken(req.headers['x-access-token']);
+		if(decodedTokenResult.error !== null)
+		{
+			return res.status(200).send({ error: decodedTokenResult.error });
+		}
+
+		// Models
+ 		const modelMgr = ModelManager.GetInstance();
+		const mNotification = modelMgr.getModel('notification');
+    const mGeofenceAreaType = modelMgr.getModel('geofenceareatype');
+    const mEventSubscription = modelMgr.getModel('eventsubscription');
+		if(!mNotification)
+ 		{
+ 			return res.status(200).send({ error: 'Could not find notification model' });
+ 		}
+    if(!mGeofenceAreaType)
+ 		{
+ 			return res.status(200).send({ error: 'Could not find geofence area type model' });
+ 		}
+    if(!mEventSubscription)
+ 		{
+ 			return res.status(200).send({ error: 'Could not find event subscription model' });
+ 		}
+
+    // Find geofence area types
+    // const geofenceAreaTypes = await mGeofenceAreaType.find({ isDeleted: false }, { label: 1 });
+    const geofenceAreaTypes = await mGeofenceAreaType.find({ isDeleted: false }, { createdBy: decodedTokenResult.user._id });
+
+    // const eventSubscriptions = await mEventSubscription.find({ createdBy: decodedTokenResult.user._id }, { createdOn: 1 });
+
+		// Find notifications
+		// const notifications = await mNotification.find({ recipient: decodedTokenResult.user._id }, { createdOn: -1 });
+	 	console.log(`[Notifications.myAlerts] notifications found for user ${decodedTokenResult.user._id} ${JSON.stringify(geofenceAreaTypes)}`)
+
+ 		res.status(200).send({
+			// results: notifications,
+      geofenceAreaTypes: geofenceAreaTypes
+      // eventSubscriptions: eventSubscriptions,
+			// token: decodedTokenResult.token,
+			// error: null
+		});
+ 	}
+ 	catch(err)
+ 	{
+ 		await Log.Error(__filename, err);
+ 		res.status(200).send({ error: err.message });
+ 	}
+ });
+
 /**
 	@name Mark Read
 	@route {POST}	/mark-read
