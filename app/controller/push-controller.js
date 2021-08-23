@@ -68,7 +68,7 @@ Router.use(BodyParser.json());
 		});
 
 		console.log('[PushController.init] subscriptions found for user: ' + decodedTokenResult.user._id + ' = ' + subscriptions.length)
-    
+
 		// Find push token
     let params =
     {
@@ -340,7 +340,8 @@ Router.use(BodyParser.json());
 			body: "test",
 			createdByAction: 'create',
 			recipient: user._id,
-			status: 'unread',
+			status: 'unread',,
+			type: geofenceArea.type._id
 		};
 		const notification = await mNotification.create(createParams, user._id);
 		console.log('[PushController./] calling SendPushNoSubscription')
@@ -414,7 +415,7 @@ Router.post('/token', async (req, res) =>
 		// Somehow this route is being called multiple times in the same second.
 		console.log('[Push controller] token 4 pushToken: ' + pushToken)
 
-		
+
 		return res.status(200).send({
 			error: null,
 			token: decodedTokenResult.token,

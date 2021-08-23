@@ -58,10 +58,10 @@ Router.post('/geofence', async (req, res) =>
 		const mEventSubscription = modelMgr.getModel('eventsubscription');
 
 		// Get user's event subscriptions so we can filter out what events to display
-		// const eventSubscriptions = await mEventSubscription.find({ createdBy: decodedTokenResult.user._id, isDeleted: false });
-	 	// const types = mEventSubscriptions.map( (subscription => {
-	 	// 	return subscription.trigger.geofenceAreaType;
-	 	// }));
+		const eventSubscriptions = await mEventSubscription.find({ createdBy: decodedTokenResult.user._id, isDeleted: false });
+	 	const types = eventSubscriptions.map( (subscription => {
+	 	 	return subscription.trigger.geofenceAreaType;
+	 	}));
 
     await Promise.all(req.body.map( async(location, i) =>
     {
@@ -110,10 +110,10 @@ Router.post('/geofence', async (req, res) =>
 				{
 					$ne: decodedTokenResult.user._id
 				},
-				// type:
-		 		// {
-		 		// 	$in: types
-		 		// }
+				type:
+		 		{
+		 		 	$in: types
+		 		}
       }
 
       const geofenceAreas = await mGeofenceArea.find(query);
@@ -143,6 +143,7 @@ Router.post('/geofence', async (req, res) =>
             createdByAction: 'create',
             recipient: decodedTokenResult.user._id,
             status: 'unread',
+						type: geofenceArea.type._id
           };
           const notification = await mNotification.create(createParams, decodedTokenResult.user._id);
           console.log('[LocationController.geofence] calling SendPushNoSubscription')

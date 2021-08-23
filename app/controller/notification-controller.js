@@ -68,10 +68,20 @@ Router.use(BodyParser.json());
     // Find geofence area types
     const geofenceAreaTypes = await mGeofenceAreaType.find({ isDeleted: false }, { label: 1 });
 
-    const eventSubscriptions = await mEventSubscription.find({ createdBy: decodedTokenResult.user._id }, { createdOn: 1 });
+		// Get user's event subscriptions so we can filter out what events to display
+    const eventSubscriptions = await mEventSubscription.find({ createdBy: decodedTokenResult.user._id, isDeleted: false }, { createdOn: 1 });
+		const types = eventSubscriptions.map( (subscription => {
+ 		 return subscription.trigger.geofenceAreaType;
+ 	 }));
 
 		// Find notifications
-		const notifications = await mNotification.find({ recipient: decodedTokenResult.user._id }, { createdOn: -1 });
+		const notifications = await mNotification.find({
+			recipient: decodedTokenResult.user._id,
+			type:
+			{
+				$in: types
+			}
+		}, { createdOn: -1 });
 	 	console.log(`[Notifications.init] notifications found for user ${decodedTokenResult.user._id} ${JSON.stringify(notifications)}`)
 
  		res.status(200).send({
