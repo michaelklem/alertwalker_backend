@@ -69,7 +69,8 @@ Router.use(BodyParser.json());
     const geofenceAreaTypes = await mGeofenceAreaType.find({ isDeleted: false }, { label: 1 });
 
 		// Get user's event subscriptions so we can filter out what events to display
-    const eventSubscriptions = await mEventSubscription.find({ createdBy: decodedTokenResult.user._id, isDeleted: false }, { createdOn: 1 });
+		// Don't filter on isDeleted false as we want to find all available
+    const eventSubscriptions = await mEventSubscription.find({ createdBy: decodedTokenResult.user._id }, { createdOn: 1 });
 		const types = eventSubscriptions.map( (subscription => {
  		 return subscription.trigger.geofenceAreaType;
  	 }));
