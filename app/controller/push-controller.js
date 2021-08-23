@@ -340,7 +340,7 @@ Router.use(BodyParser.json());
 			body: "test",
 			createdByAction: 'create',
 			recipient: user._id,
-			status: 'unread',,
+			status: 'unread',
 			type: geofenceArea.type._id
 		};
 		const notification = await mNotification.create(createParams, user._id);
