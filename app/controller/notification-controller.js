@@ -71,7 +71,8 @@ Router.use(BodyParser.json());
     const eventSubscriptions = await mEventSubscription.find({ createdBy: decodedTokenResult.user._id }, { createdOn: 1 });
 
 		// Find notifications
-		const notifications = await mNotification.find({ recipient: decodedTokenResult.user._id }, { createdOn: -1 });
+		const notifications = await mNotification.find({ recipient: decodedTokenResult.user._id }, { createdOn: -1 }).select({ "_id": 0, "title":0});
+
 	 	console.log(`[Notifications.init] notifications found for user ${decodedTokenResult.user._id} ${JSON.stringify(notifications)}`)
 
  		res.status(200).send({
