@@ -281,10 +281,17 @@ Router.get('/handler', async (req, res) =>
 	const modelMgr = ModelManager.GetInstance();
 	const mConfiguration = modelMgr.getModel('configuration');
 
+	/*
+		Changing this to use FRONTEND_URL for oauth on alertwalkerdashboard.com
+		I believe the mobile Google login doesn't use this route any more.
 	let mobileUrl = await mConfiguration.findOne({ name: 'MOBILE_URL '});
 	mobileUrl = mobileUrl.value;
+	*/
 
-	let redirectUrl = mobileUrl + 'api?source=';
+	let frontendUrl = await mConfiguration.findOne({ 'FRONTEND_URL' });
+	frontendUrl = frontendUrl.value;
+
+	let redirectUrl = /*mobileUrl*/frontendUrl + 'api?source=';
 	if(req.query.state && req.query.state.indexOf('microsoft') !== -1)
 	{
 		redirectUrl += 'microsoft&code=' + req.query.code;
