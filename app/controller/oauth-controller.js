@@ -288,7 +288,7 @@ Router.get('/handler', async (req, res) =>
 	mobileUrl = mobileUrl.value;
 	*/
 
-	let frontendUrl = await mConfiguration.findOne({ 'FRONTEND_URL' });
+	let frontendUrl = await mConfiguration.findOne({ name: 'FRONTEND_URL' });
 	frontendUrl = frontendUrl.value;
 
 	let redirectUrl = /*mobileUrl*/frontendUrl + 'api?source=';
