@@ -291,7 +291,9 @@ Router.get('/handler', async (req, res) =>
 	let frontendUrl = await mConfiguration.findOne({ name: 'FRONTEND_URL' });
 	frontendUrl = frontendUrl.value;
 
-	let redirectUrl = /*mobileUrl*/frontendUrl + 'api?source=';
+	//let redirectUrl = mobileUrl + 'api?source=';
+	let redirectUrl = frontendUrl + '/api?source=';
+
 	if(req.query.state && req.query.state.indexOf('microsoft') !== -1)
 	{
 		redirectUrl += 'microsoft&code=' + req.query.code;
