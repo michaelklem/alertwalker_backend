@@ -63,13 +63,7 @@ Router.post('/side-nav', async (req, res) =>
 		}
 		else if(decodedTokenResult.user._id !== 'guest')
 		{
-			navData.push({ title: 'Messages', link: 'messages', icon: 'icon-home-messages.png' });
-	    navData.push({ title: 'Friends',  link: 'friends',  icon: 'icon-home-friends.png' });
-	    navData.push({ title: 'Settings', link: 'settings', icon: 'icon-home-settings.png' });
-
-			navData.push({ title: 'Testimonies', 	link: 'testimonies', 	icon: 'icon-home-testimonies.png' });
-			navData.push({ title: 'Blog', 				link: 'blog', 				icon: 'icon-home-blog.png' });
-			navData.push({ title: 'FAQ', 					link: 'faq', 					icon: 'icon-home-faq.png' });
+	
 		}
 
 		return res.status(200).send({ error: null, results: navData, token: decodedTokenResult.token });
