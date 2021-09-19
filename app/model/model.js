@@ -620,7 +620,9 @@ class Model
       // ModelManager.convertFormFieldsToJsonParams will set the user field to be the userId of the user requesting an update
       // requery the document so we can auto populate the user field if need be
       // might actually want to keep this just to handle populating all reference fields if schemaField definition says to
-      doc = await this.forId(id)
+      // Populate auto ref fields
+      doc = await this.findOne({ _id: id });
+
       return doc;
     }
     catch(err)
