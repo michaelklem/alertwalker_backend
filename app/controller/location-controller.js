@@ -227,18 +227,41 @@ Router.post('/map', async (req, res) =>
      return res.status(200).send({ error: 'Missing params' });
    }
 
-	 // Save user's last location
-	 await mUser.updateById(decodedTokenResult.user._id,
+	 let userId = decodedTokenResult.user._id;
+	 let location = [req.body.location.longitude, req.body.location.latitude];
+
+	 // If admin let them filter on any user
+	 if(decodedTokenResult.user.authorization.type === 'admin' &&
+	 		req.body.userId &&
+			req.body.location.longitude &&
+			req.body.location.latitude)
 	 {
-		 lastLocation:
+		 userId = req.body.userId;
+
+		 // Lookup user's last location to use
+		 const filteredOnUser = await mUser.findOne({ _id: req.body.userId });
+		 if(!filteredOnUser.lastLocation || filteredOnUser.lastLocation.coordinates.length < 2)
 		 {
-			 type: 'Point',
-			 coordinates: [req.body.location.longitude, req.body.location.latitude]
+			 return res.status(200).send({ error: 'User does not have a last location set yet.' });
 		 }
-	 });
+		 location = [filteredOnUser.lastLocation.coordinates[0], filteredOnUser.lastLocation.coordinates[1]];
+	 }
+
+	 // Save user's last location (only if this is not an admin from dashboard calling this API route)
+	 if(!req.body.userId)
+	 {
+		 await mUser.updateById(userId,
+		 {
+			 lastLocation:
+			 {
+				 type: 'Point',
+				 coordinates: location
+			 }
+		 });
+	 }
 
 	 // Get user's event subscriptions so we can filter out what events to display
-	 const eventSubscriptions = await mEventSubscription.find({ createdBy: decodedTokenResult.user._id, isDeleted: false });
+	 const eventSubscriptions = await mEventSubscription.find({ createdBy: userId, isDeleted: false });
 	 const types = eventSubscriptions.map( (subscription => {
 		 return subscription.trigger.geofenceAreaType;
 	 }));
@@ -257,7 +280,7 @@ Router.post('/map', async (req, res) =>
          $geometry:
          {
            type: 'Point',
-           coordinates: [req.body.location.longitude, req.body.location.latitude]
+           coordinates: location
          }
        }
      },
@@ -272,7 +295,11 @@ Router.post('/map', async (req, res) =>
    });
 
    // Success
-   res.status(200).send({ results: geofenceAreas, error: null, token: decodedTokenResult.token });
+   res.status(200).send({
+		 results: geofenceAreas,
+		 error: null,
+		 token: decodedTokenResult.token
+	 });
  }
  catch(err)
  {
