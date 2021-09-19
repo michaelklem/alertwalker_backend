@@ -64,7 +64,7 @@ Router.post('/create', async (req, res) =>
 				}
 
 				console.log('[data controller] create form fields: ' + JSON.stringify(fields))
-				 
+
 				// Locate model
 				const modelMgr = ModelManager.GetInstance();
 				const mModel = modelMgr.getModel(fields.model[0]);
@@ -115,7 +115,7 @@ Router.post('/create', async (req, res) =>
 				// Need to send out push notifications too via sockets so the alert
 				// displays on user's maps when it is created
 				Emailer.sendEmailToSupport('alert created', `An alert was created by user email: ${decodedTokenResult.user.email} and id: ${decodedTokenResult.user._id} with location coords: ${fields.location} and note: ${fields.note}`)
-				
+
 				// Handle notifications
 				await NotificationManager.HandleSubscriptionsFor(	fields.model[0],
 																													'create',
@@ -519,8 +519,9 @@ Router.post('/update', async (req, res) =>
 				// Build update params
 				const coreDoc = await mModel.getCoreDocument();
 				const updateParams = await modelMgr.convertFormFieldsToJsonParams(coreDoc.schemaFields, fields, files, decodedTokenResult.user._id);
-				console.log(updateParams);
 				const updatedRecord = await mModel.updateById(fields.id[0], updateParams);
+
+				console.log(updatedRecord);
 
         // Success
         res.status(200).send({ error: null, message: 'Updated successfully', results: updatedRecord, token: decodedTokenResult.token });
