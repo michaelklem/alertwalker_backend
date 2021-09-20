@@ -229,6 +229,7 @@ Router.post('/map', async (req, res) =>
 
 	 let userId = decodedTokenResult.user._id;
 	 let location = [req.body.location.longitude, req.body.location.latitude];
+	 let filteredOnUser = decodedTokenResult.user;
 
 	 // If admin let them filter on any user
 	 if(decodedTokenResult.user.authorization.type === 'admin' &&
@@ -239,7 +240,7 @@ Router.post('/map', async (req, res) =>
 		 userId = req.body.userId;
 
 		 // Lookup user's last location to use
-		 const filteredOnUser = await mUser.findOne({ _id: req.body.userId });
+		 filteredOnUser = await mUser.findOne({ _id: req.body.userId });
 		 if(!filteredOnUser.lastLocation || filteredOnUser.lastLocation.coordinates.length < 2)
 		 {
 			 return res.status(200).send({ error: 'User does not have a last location set yet.' });
@@ -250,7 +251,7 @@ Router.post('/map', async (req, res) =>
 	 // Save user's last location (only if this is not an admin from dashboard calling this API route)
 	 if(!req.body.userId)
 	 {
-		 await mUser.updateById(userId,
+		 filteredOnUser = await mUser.updateById(userId,
 		 {
 			 lastLocation:
 			 {
@@ -297,6 +298,7 @@ Router.post('/map', async (req, res) =>
    // Success
    res.status(200).send({
 		 results: geofenceAreas,
+		 lastLocation: filteredOnUser.lastLocation,
 		 error: null,
 		 token: decodedTokenResult.token
 	 });
