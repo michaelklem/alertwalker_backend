@@ -442,25 +442,14 @@ class Model
 		try
 		{
       let doc = null;
-
-      const autoPopulateFields = await this.buildAutoPopulateReferenceQuery();
-
       if(select !== '*')
       {
         doc = doc = await this.#mongoModel.findOne(params).sort(sort).select(select).exec();
       }
       else
       {
-        if(autoPopulateFields.length > 0)
-        {
-          doc = await this.#mongoModel.findOne(params).populate(autoPopulateFields).sort().exec();
-        }
-        else
-        {
-          doc = await this.#mongoModel.findOne(params).sort().exec();
-        }
+        doc = await this.#mongoModel.findOne(params).sort().exec();
       }
-
       return doc;
 		}
 		catch(err)
