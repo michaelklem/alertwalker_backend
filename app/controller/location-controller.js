@@ -295,7 +295,7 @@ Router.post('/map', async (req, res) =>
 		 }
    });
 
-	 	console.log(geofenceArea.map( (area) =>
+	 	console.log(geofenceAreas.map( (area) =>
 	 	{
 			return area._id.toString()
 		}));
