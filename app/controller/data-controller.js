@@ -521,10 +521,16 @@ Router.post('/update', async (req, res) =>
 				const updateParams = await modelMgr.convertFormFieldsToJsonParams(coreDoc.schemaFields, fields, files, decodedTokenResult.user._id);
 				const updatedRecord = await mModel.updateById(fields.id[0], updateParams);
 
+				console.log('Updated record');
 				console.log(updatedRecord);
 
         // Success
-        res.status(200).send({ error: null, message: 'Updated successfully', results: updatedRecord, token: decodedTokenResult.token });
+        res.status(200).send({
+					error: null,
+					message: 'Updated successfully',
+					results: updatedRecord,
+					token: decodedTokenResult.token
+				});
       }
       catch(err)
       {
