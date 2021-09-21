@@ -295,6 +295,11 @@ Router.post('/map', async (req, res) =>
 		 }
    });
 
+	 	console.log(geofenceArea.map( (area) =>
+	 	{
+			return area._id.toString()
+		}));
+
    // Success
    res.status(200).send({
 		 results: geofenceAreas,
