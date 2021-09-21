@@ -521,8 +521,9 @@ Router.post('/update', async (req, res) =>
 				const updateParams = await modelMgr.convertFormFieldsToJsonParams(coreDoc.schemaFields, fields, files, decodedTokenResult.user._id);
 				let updatedRecord = await mModel.updateById(fields.id[0], updateParams);
 
-				// Weird work around to try to fix auto populate bug 
-				updatedRecord = await mModel.findOne({ _id: fields.id[0] });
+				// Weird work around to try to fix auto populate bug
+				updatedRecord = await mModel.find({ _id: fields.id[0] });
+				updatedRecord = {...updatedRecord[0]};
 				console.log('Updated record');
 				console.log(updatedRecord);
 
