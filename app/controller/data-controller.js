@@ -519,7 +519,7 @@ Router.post('/update', async (req, res) =>
 				// Build update params
 				const coreDoc = await mModel.getCoreDocument();
 				const updateParams = await modelMgr.convertFormFieldsToJsonParams(coreDoc.schemaFields, fields, files, decodedTokenResult.user._id);
-				const updatedRecord = await mModel.updateById(fields.id[0], updateParams);
+				let updatedRecord = await mModel.updateById(fields.id[0], updateParams);
 
 				updatedRecord = JSON.parse(JSON.stringify(updatedRecord));
 
