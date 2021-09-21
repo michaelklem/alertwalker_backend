@@ -271,7 +271,8 @@ Router.post('/map', async (req, res) =>
    var d = new Date();
    d.setHours(d.getHours() - 2);
 
-   const geofenceAreas = await mGeofenceArea.find({
+	 const queryParams =
+	 {
      location:
      {
        // Filter by alerts near us
@@ -293,12 +294,16 @@ Router.post('/map', async (req, res) =>
 		 {
 			 $in: types
 		 }
-   });
+   };
 
-	 	console.log(geofenceAreas.map( (area) =>
+   const geofenceAreas = await mGeofenceArea.find(queryParams);
+
+	 /*	console.log(geofenceAreas.map( (area) =>
 	 	{
 			return area._id.toString()
-		}));
+		}));*/
+
+		console.log(queryParams);
 
    // Success
    res.status(200).send({
