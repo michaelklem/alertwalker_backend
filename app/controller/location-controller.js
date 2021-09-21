@@ -233,9 +233,7 @@ Router.post('/map', async (req, res) =>
 
 	 // If admin let them filter on any user
 	 if(decodedTokenResult.user.authorization.type === 'admin' &&
-	 		req.body.userId &&
-			req.body.location.longitude &&
-			req.body.location.latitude)
+	 		req.body.userId)
 	 {
 		 userId = req.body.userId;
 
@@ -246,6 +244,8 @@ Router.post('/map', async (req, res) =>
 			 return res.status(200).send({ error: 'User does not have a last location set yet.' });
 		 }
 		 location = [filteredOnUser.lastLocation.coordinates[0], filteredOnUser.lastLocation.coordinates[1]];
+
+		 console.log('Admin filtering on user');
 	 }
 
 	 // Save user's last location (only if this is not an admin from dashboard calling this API route)
