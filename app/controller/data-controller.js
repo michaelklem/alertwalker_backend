@@ -523,7 +523,7 @@ Router.post('/update', async (req, res) =>
 
 				// Weird work around to try to fix auto populate bug
 				updatedRecord = await mModel.find({ _id: fields.id[0] });
-				updatedRecord = {...updatedRecord[0]};
+				updatedRecord = updatedRecord[0];
 				console.log('Updated record');
 				console.log(updatedRecord);
 
